@@ -1,0 +1,10 @@
+{
+	"miniprogramRoot": "./client",
+	"qcloudRoot": "./server",
+	"setting": {
+		"newFeature": true
+	},
+	"appid": "wx2b3cb34ad738f81a",
+	"projectname": "littleTime",
+	"condition": {}
+}
