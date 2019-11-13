@@ -1,6 +1,12 @@
 WEIXIN little programe
 
-office 2016
-XNTT9-CWMM3-RM2YM-D7KB2-JB6DV
+更换office序列号方法 
 
-BHXN7-MQB36-MTHQ4-8MHKV-CYT97
+slmgr.vbs -ipk  XXXX（序列号）
+
+激活工具，会报毒。
+不知道有没有木马，反正我是用了
+
+链接：https://pan.baidu.com/s/15i7ElpoaTHjiFNVYTJQrdA 
+提取码：jqo3 
+
