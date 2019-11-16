@@ -10,3 +10,7 @@ slmgr.vbs -ipk  XXXX（序列号）
 链接：https://pan.baidu.com/s/15i7ElpoaTHjiFNVYTJQrdA 
 提取码：jqo3 
 
+idea 破解
+
+链接: https://pan.baidu.com/s/1xrqMv2h2ppjvrJFyyE3lTg
+提取码: k6zf
