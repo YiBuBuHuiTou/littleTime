@@ -1,5 +1,8 @@
 WEIXIN little programe
 
+正在开发中，还没有完全想好，慢慢更新吧。
+
+
 更换office序列号方法 
 
 slmgr.vbs -ipk  XXXX（序列号）
