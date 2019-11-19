@@ -8,7 +8,7 @@ public enum PERMISSION {
     /**
      * 注册权限 bit0   0：不可， 1：可
      */
-    REGISTE("REGISTE", 0),
+    REGISTER("REGISTER", 0),
 
     /**
      * 登录权限 bit1    0：不可， 1：可

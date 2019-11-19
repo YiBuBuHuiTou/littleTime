@@ -1,4 +1,4 @@
-package test.com.cxd.littletime.common.util; 
+package com.cxd.littletime.common.util;
 
 import org.junit.Test; 
 import org.junit.Before; 
