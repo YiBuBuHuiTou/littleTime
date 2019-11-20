@@ -1,11 +1,10 @@
-package com.cxd.littletime.common.crypto.impl;
+package com.cxd.littletime.common.util;
 
 import com.cxd.littletime.common.constant.ENCRYPT_TYPE;
-import com.cxd.littletime.common.crypto.CryptoCommon;
 import com.cxd.littletime.common.exception.NotSupportedKeyException;
-import com.cxd.littletime.common.util.StringUtils;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
+import sun.plugin2.message.Message;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -13,15 +12,12 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.math.BigInteger;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
-/**
- * 对称加密实现类
- * @author YiBuBuHuiTou
- */
-public class SymmetricEncryptImpl implements CryptoCommon {
-
+public class CryptoUtils {
     /**
      * 秘钥默认向量
      */
@@ -39,8 +35,7 @@ public class SymmetricEncryptImpl implements CryptoCommon {
      * @param content   需要加密的内容
      * @return
      */
-    @Override
-    public String symmetricEncrypt(String key, ENCRYPT_TYPE algorithm, String content) {
+    public static String symmetricEncrypt(String key, ENCRYPT_TYPE algorithm, String content) {
         String result = null;
         // 判断key 和 内容是否为空，如果为空直接返回null
         if (StringUtils.isEmpty(key) || StringUtils.isEmpty(content)) {
@@ -63,8 +58,7 @@ public class SymmetricEncryptImpl implements CryptoCommon {
      * @param content   需要加密的内容
      * @return
      */
-    @Override
-    public String symmetricDecrypt(String key, ENCRYPT_TYPE algorithm, String content) {
+    public static String symmetricDecrypt(String key, ENCRYPT_TYPE algorithm, String content) {
         String result = null;
         // 判断key 和 内容是否为空，如果为空直接返回null
         if (StringUtils.isEmpty(key) || StringUtils.isEmpty(content)) {
@@ -87,8 +81,7 @@ public class SymmetricEncryptImpl implements CryptoCommon {
      * @param content   需要加密的内容
      * @return
      */
-    @Override
-    public String asymmetricDecrypt(String key, ENCRYPT_TYPE algorithm, String content) {
+    public static String asymmetricDecrypt(String key, ENCRYPT_TYPE algorithm, String content) {
         return null;
     }
 
@@ -99,8 +92,7 @@ public class SymmetricEncryptImpl implements CryptoCommon {
      * @param content   需要加密的内容
      * @return
      */
-    @Override
-    public String asymmetricEncrypt(String key, ENCRYPT_TYPE algorithm, String content) {
+    public static String asymmetricEncrypt(String key, ENCRYPT_TYPE algorithm, String content) {
         return null;
     }
 
@@ -110,9 +102,27 @@ public class SymmetricEncryptImpl implements CryptoCommon {
      * @param content   需要加密的内容
      * @return
      */
-    @Override
-    public String hashAlgorithm(ENCRYPT_TYPE algorithm, String content) {
-        return null;
+    public static String hashAlgorithm(ENCRYPT_TYPE algorithm, String content) throws NoSuchAlgorithmException {
+        String result = null;
+        switch (algorithm) {
+            case MD5:
+                // 生成一个MD5摘要
+                MessageDigest messageDigest_md5 = MessageDigest.getInstance("MD5");
+                // 使用指定字节数组更新摘要
+                messageDigest_md5.update(content.getBytes());
+                // 最终生成摘要并转为16进制
+                result = new BigInteger(1, messageDigest_md5.digest()).toString(16);
+                break;
+            case SHA256:
+                MessageDigest messageDigest_sha256 = MessageDigest.getInstance("SHA-256");
+                messageDigest_sha256.update(content.getBytes());
+                result = new BigInteger(1, messageDigest_sha256.digest()).toString(16);
+
+                break;
+
+
+        }
+        return result;
     }
 
     /**
@@ -121,7 +131,7 @@ public class SymmetricEncryptImpl implements CryptoCommon {
      * @param content 加密内容
      * @return        加密后的base64码
      */
-    private String aesEncrypt(String key, String content) {
+    private static String aesEncrypt(String key, String content) {
         String result = null;
         try {
             // 将key转为AES秘钥
@@ -156,7 +166,13 @@ public class SymmetricEncryptImpl implements CryptoCommon {
         return result;
     }
 
-    private String aesDecrypt(String key, String content) {
+    /**
+     * AES解密
+     * @param key
+     * @param content
+     * @return
+     */
+    private static String aesDecrypt(String key, String content) {
         String result = null;
         try {
             // 将秘钥转换为AES专用秘钥
@@ -186,7 +202,12 @@ public class SymmetricEncryptImpl implements CryptoCommon {
         return result;
     }
 
-    private SecretKeySpec convertKeyToAESKey(String key) {
+    /**
+     * 将key转换为AES专用秘钥
+     * @param key
+     * @return
+     */
+    private static SecretKeySpec convertKeyToAESKey(String key) {
         SecretKeySpec secretKeySpec = null;
         try {
             // AES秘钥生成器

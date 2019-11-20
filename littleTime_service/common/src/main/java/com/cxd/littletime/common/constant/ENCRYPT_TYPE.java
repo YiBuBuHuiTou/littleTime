@@ -10,12 +10,16 @@ public enum ENCRYPT_TYPE {
      * MD5加密方式
      */
     MD5("MD5",0),
+    /**
+     * SHA
+     */
+    SHA256("SHA256",1),
 
     /**
      * AES 加密方式
      */
 
-    AES("AES",1);
+    AES("AES",2);
     /**
      * 枚举类型名字
      */
