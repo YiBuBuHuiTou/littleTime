@@ -1,0 +1,12 @@
+#功能配置文件
+#加密
+custom.sysConfig.encryptEnable = true
+#注册
+custom.sysConfig.registerEnable = true
+#登录
+custom.sysConfig.loginEnable = true
+#更新
+custom.sysConfig.updateEnable = true
+#测试
+custom.test = YIBUBUHUITOU
+
