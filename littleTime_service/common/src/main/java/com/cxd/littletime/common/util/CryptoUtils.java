@@ -4,7 +4,6 @@ import com.cxd.littletime.common.constant.ENCRYPT_TYPE;
 import com.cxd.littletime.common.exception.NotSupportedKeyException;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
-import sun.plugin2.message.Message;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
