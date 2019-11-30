@@ -14,8 +14,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class UserManagerController {
     @ResponseBody
     @RequestMapping(value="/hello")
-    public String resiter() {
+    public String hello() {
         return "success";
     }
 
+    @ResponseBody
+    @RequestMapping(value="/test")
+    public String test() {
+        return "test";
+    }
 }

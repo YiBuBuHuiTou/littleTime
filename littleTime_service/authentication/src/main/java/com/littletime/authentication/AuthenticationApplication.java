@@ -4,6 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.webservices.WebServicesAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 /**
@@ -11,9 +12,9 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
  */
 // 暂不启用web service
 @SpringBootApplication(exclude = WebServicesAutoConfiguration.class)
+// 扫描相应代码，找到相应的过滤器类，并注册过滤器
+@ServletComponentScan(basePackages = "com.littletime.authentication.filter")
 public class AuthenticationApplication extends SpringBootServletInitializer {
-
-
 
     /**
      * 使用外部tomcat
