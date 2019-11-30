@@ -11,7 +11,7 @@ import java.util.Map;
  */
 
 @Component
-@PropertySource(value = {"classpath:custom_config.preperties"})
+@PropertySource(value = {"classpath:custom_config.properties"})
 @ConfigurationProperties(prefix = "custom")
 public class CustomConfig {
 
