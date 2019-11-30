@@ -12,6 +12,7 @@
     <artifactId>authentication</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>authentication</name>
+    <packaging>war</packaging>
     <description>authentication for Wei Xin little grame - littleTime</description>
 
     <properties>
