@@ -16,6 +16,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
+/**
+ * @author YiBuBuHuiTou
+ */
 public class CryptoUtils {
     /**
      * 秘钥默认向量
@@ -116,8 +119,8 @@ public class CryptoUtils {
                 MessageDigest messageDigest_sha256 = MessageDigest.getInstance("SHA-256");
                 messageDigest_sha256.update(content.getBytes());
                 result = new BigInteger(1, messageDigest_sha256.digest()).toString(16);
-
                 break;
+            default: break;
 
 
         }
@@ -128,9 +131,10 @@ public class CryptoUtils {
      * AES加密
      * @param key     加密key
      * @param content 加密内容
+     * @param ivP     自定义加密向量
      * @return        加密后的base64码
      */
-    private static String aesEncrypt(String key, String content) {
+    private static String aesEncrypt(String key, String content, String ivP) {
         String result = null;
         try {
             // 将key转为AES秘钥
@@ -141,7 +145,7 @@ public class CryptoUtils {
             if ("CBC".equals(AES_ENCRYPT_MODE)) {
                 cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
                 //CBC 模式需要一个向量
-                IvParameterSpec iv = new IvParameterSpec(ivParameter.getBytes());
+                IvParameterSpec iv = new IvParameterSpec(ivP.getBytes());
                 // 设置密码器的运行模式（加密/解密），使用秘钥和向量初始化密码器
                 cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec,iv);
             } else if ("ECB".equals(AES_ENCRYPT_MODE)) {
@@ -166,12 +170,23 @@ public class CryptoUtils {
     }
 
     /**
+     * @param key      加密key
+     * @param content  加密内容
+     * @return         密文
+     */
+    private static String aesEncrypt(String key, String content) {
+        return aesEncrypt(key, content, ivParameter);
+    }
+
+
+    /**
      * AES解密
      * @param key
      * @param content
+     * @param ivP
      * @return
      */
-    private static String aesDecrypt(String key, String content) {
+    private static String aesDecrypt(String key, String content, String ivP) {
         String result = null;
         try {
             // 将秘钥转换为AES专用秘钥
@@ -181,7 +196,7 @@ public class CryptoUtils {
             if ("CBC".equals(AES_ENCRYPT_MODE)) {
                 cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
                 //CBC 模式需要一个向量
-                IvParameterSpec iv = new IvParameterSpec(ivParameter.getBytes());
+                IvParameterSpec iv = new IvParameterSpec(ivP.getBytes());
                 // 设置密码器的运行模式（加密/解密），使用秘钥和向量初始化密码器
                 cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, iv);
             } else if ("ECB".equals(AES_ENCRYPT_MODE)) {
@@ -199,6 +214,16 @@ public class CryptoUtils {
             e.printStackTrace();
         }
         return result;
+    }
+
+    /**
+     * 解密
+     * @param key 解密key
+     * @param content  密文
+     * @return    明文
+     */
+    private static String aesDecrypt(String key, String content) {
+        return aesDecrypt(key, content, ivParameter);
     }
 
     /**
@@ -222,7 +247,6 @@ public class CryptoUtils {
             }
             // 转换为AES专用秘钥
             secretKeySpec = new SecretKeySpec(secretKeyBytes, "AES");
-            return secretKeySpec;
         } catch (NotSupportedKeyException e) {
             e.printStackTrace();
         } catch (NoSuchAlgorithmException e) {
