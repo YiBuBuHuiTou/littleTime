@@ -54,13 +54,6 @@
             <artifactId>mariadb-java-client</artifactId>
             <version>2.5.2</version>
         </dependency>
-
-        <!-- log4j 依赖-->
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.12</version>
-        </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
