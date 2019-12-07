@@ -1,23 +1,24 @@
 package com.littletime.authentication.controller;
 
-import org.springframework.stereotype.Controller;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author YiBuBuHuiTou
  */
-@Controller
+@RestController
 public class UserManagerController {
-    @ResponseBody
     @RequestMapping(value="/hello")
     public String hello() {
         return "success";
     }
 
-    @ResponseBody
     @RequestMapping(value="/test")
     public String test() {
+        Logger logger = LoggerFactory.getLogger(UserManagerController.class);
+        logger.info("123");
         return "test";
     }
 }
