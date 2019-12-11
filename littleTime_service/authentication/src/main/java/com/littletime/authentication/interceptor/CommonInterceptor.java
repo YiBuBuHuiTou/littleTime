@@ -1,16 +1,30 @@
 package com.littletime.authentication.interceptor;
 
+import com.cxd.littletime.common.util.IpUtils;
+import com.littletime.authentication.common.AuthenticationUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * @author YiBuBuHuiTou
  * 通用拦截器
  */
 public class CommonInterceptor extends HandlerInterceptorAdapter {
+
+    @Autowired
+    private List<String> whiteList;
+
+    @Autowired
+    private List<String> blackList;
+
+    private static Logger LOGGER = LoggerFactory.getLogger(CommonInterceptor.class);
     public CommonInterceptor() {
         super();
     }
@@ -27,9 +41,40 @@ public class CommonInterceptor extends HandlerInterceptorAdapter {
      */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        //return super.preHandle(request, response, handler);
         System.out.println("interceptor start");
-        return false;
+        boolean isIntercept = true;
+        //黑名单和白名单拦截
+        String ip = AuthenticationUtils.getIpFromHttp(request);
+        if (whiteList != null) {
+            // 配置文件白名单
+            boolean isInWhiteConf = isIpInIpList(ip, whiteList);
+            // 数据白名单
+            // TODO
+            boolean isInWhiteDb = false;
+            if (isInWhiteConf || isInWhiteDb) {
+                isIntercept = false;
+                LOGGER.info("白名单校验：该用户ip处于于白名单中，不拦截。");
+            } else {
+                LOGGER.warn("白名单校验：该用户不在于白名单中，该请求已被拦截。 被拦截ip：" + ip);
+            }
+        }
+
+        if (blackList != null) {
+            //配置文件黑名单
+            boolean isInBlackConf = isIpInIpList(ip,blackList);
+            //数据库黑名单
+            // TODO
+            boolean isInBlackDb = false;
+            if (!isInBlackConf && !isInBlackDb) {
+                isIntercept = false;
+                LOGGER.info("黑名单校验：该用户ip不在黑名单中，不拦截");
+            } else {
+                LOGGER.warn("黑名单校验：该用户ip不处于黑名单中，该请求已被拦截。 被拦截ip：" + ip);
+            }
+        }
+
+
+        return isIntercept;
     }
 
     /**
@@ -63,5 +108,37 @@ public class CommonInterceptor extends HandlerInterceptorAdapter {
     @Override
     public void afterConcurrentHandlingStarted(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         super.afterConcurrentHandlingStarted(request, response, handler);
+    }
+
+    /**
+     * 判断IP是否在名单里
+     * @param ip
+     * @param iptables
+     * @return
+     */
+    private boolean isIpInIpList(String ip, List<String> iptables) {
+        boolean isIpInIpList = false;
+
+        for (String ipStr : iptables) {
+            if (IpUtils.isSingleIP(ipStr) && !IpUtils.isIP(ipStr)) {
+                continue;
+            } else if (IpUtils.isSingleIP(ipStr)) {
+                if (ip.equals(ipStr)) {
+                    isIpInIpList = true;
+                    break;
+                }
+            } else {
+                long ipNum = IpUtils.ip2Long(ip);
+                String[] ips = ipStr.split("-");
+                long start = IpUtils.ip2Long(ips[0]);
+                long end = IpUtils.ip2Long(ips[1]);
+                long currentIp = IpUtils.ip2Long(ip);
+                if (start != 0L && end != 0L && currentIp >= start && currentIp <= end) {
+                    isIpInIpList = true;
+                    break;
+                }
+            }
+        }
+        return isIpInIpList;
     }
 }
