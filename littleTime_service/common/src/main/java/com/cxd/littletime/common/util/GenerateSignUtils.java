@@ -13,7 +13,7 @@ import java.util.SortedMap;
 public class GenerateSignUtils {
 
     /**
-     * 根据parameter 生成签名
+     * 根据parameter 生成签名（使用时间戳作为key，时间戳的补足16字节作向量加密后制作摘要验证请求，）
      * @param parameters
      * @return
      */
@@ -22,6 +22,7 @@ public class GenerateSignUtils {
         // 判断参数是否为空（参数至少大于2否则是非法参数：sign）
         if (parameters != null && parameters.size() > 2) {
             String timeStamp = parameters.get("timeStamp");
+            // AES 解密 向量 key 忘记实现了
             String ivParameter = null;
             if(StringUtils.isEmpty(timeStamp)) {
                 return null;
