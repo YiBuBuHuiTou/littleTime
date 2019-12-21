@@ -41,12 +41,13 @@ public class TestInfoUtils extends TestWatcher {
         // 类名
         String classTemp = description.getClassName();
         // 方法名
-        String methodTemp = description.getMethodName().substring(4);
+        //String methodTemp = description.getMethodName().substring(4);
         String[] classes = classTemp.substring(0, classTemp.length()-4).split("\\.");
         // 处理后不带包名，不带test的类名
         this.className = classes[classes.length-1];
         // 处理后不带test的方法名
-        this.methodName = methodTemp.substring(0,1).toLowerCase() + methodTemp.substring(1);
+        //this.methodName = methodTemp.substring(0,1).toLowerCase() + methodTemp.substring(1);
+        this.methodName = description.getMethodName();
     }
 
     @Override

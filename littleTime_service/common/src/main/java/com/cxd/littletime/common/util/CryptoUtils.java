@@ -248,8 +248,10 @@ public class CryptoUtils {
             // 转换为AES专用秘钥
             secretKeySpec = new SecretKeySpec(secretKeyBytes, "AES");
         } catch (NotSupportedKeyException e) {
+            //TODO
             e.printStackTrace();
         } catch (NoSuchAlgorithmException e) {
+            //TODO
             e.printStackTrace();
         }
         return secretKeySpec;

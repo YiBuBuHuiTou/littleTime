@@ -1,45 +1,45 @@
 package com.cxd.littletime.common.constant;
 
-import org.junit.Test; 
-import org.junit.Before; 
-import org.junit.After; 
+import com.cxd.littletime.common.util.TestInfoUtils;
+import org.junit.*;
 
-/** 
-* PERMISSION Tester. 
-* 
-* @author <Authors name> 
-* @since <pre>十一月 18, 2019</pre> 
-* @version 1.0 
-*/ 
-public class PERMISSIONTest { 
+/**
+ * PERMISSION Tester.
+ *
+ * @author <Authors name>
+ * @version 1.0
+ * @since <pre>十一月 18, 2019</pre>
+ */
+public class PERMISSIONTest {
 
-@Before
-public void before() throws Exception { 
-} 
+    @Rule
+    public TestInfoUtils testInfo = new TestInfoUtils();
 
-@After
-public void after() throws Exception { 
-} 
+    @Before
+    public void before() throws Exception {
+        System.out.println("被测试类: " + testInfo.getClassName() + ", 测试用例名: " + testInfo.getMethodName() + "开始测试");
+    }
 
-/** 
-* 
-* Method: toString() 
-* 
-*/ 
-@Test
-public void testToString() throws Exception { 
-//TODO: Test goes here... 
-} 
+    @After
+    public void after() throws Exception {
+        System.out.println("被测试类: " + testInfo.getClassName() + ", 测试用例名: " + testInfo.getMethodName() + "结束测试");
+    }
 
-/** 
-* 
-* Method: getNameByIndex(int index) 
-* 
-*/ 
-@Test
-public void testGetNameByIndex() throws Exception { 
-//TODO: Test goes here... 
-} 
+    /**
+     * Method: toString()
+     */
+    @Test
+    public void testToString() throws Exception {
+        Assert.assertEquals(PERMISSION.LOGIN.toString(),"LOGIN");
+        Assert.assertEquals(PERMISSION.REGISTER.toString(),"REGISTER");
+    }
 
-
+    /**
+     * Method: getNameByIndex(int index)
+     */
+    @Test
+    public void testGetNameByIndex() throws Exception {
+        Assert.assertEquals(PERMISSION.getNameByIndex(0),PERMISSION.REGISTER);
+        Assert.assertEquals(PERMISSION.getNameByIndex(1),PERMISSION.LOGIN);
+    }
 } 
