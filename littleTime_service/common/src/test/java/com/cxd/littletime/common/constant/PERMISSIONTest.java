@@ -30,8 +30,8 @@ public class PERMISSIONTest {
      */
     @Test
     public void testToString() throws Exception {
-        Assert.assertEquals(PERMISSION.LOGIN.toString(),"LOGIN");
-        Assert.assertEquals(PERMISSION.REGISTER.toString(),"REGISTER");
+        Assert.assertEquals("LOGIN",PERMISSION.LOGIN.toString());
+        Assert.assertEquals("REGISTER",PERMISSION.REGISTER.toString());
     }
 
     /**
@@ -39,7 +39,7 @@ public class PERMISSIONTest {
      */
     @Test
     public void testGetNameByIndex() throws Exception {
-        Assert.assertEquals(PERMISSION.getNameByIndex(0),PERMISSION.REGISTER);
-        Assert.assertEquals(PERMISSION.getNameByIndex(1),PERMISSION.LOGIN);
+        Assert.assertEquals(PERMISSION.REGISTER,PERMISSION.getNameByIndex(0));
+        Assert.assertEquals(PERMISSION.LOGIN,PERMISSION.getNameByIndex(1));
     }
 } 

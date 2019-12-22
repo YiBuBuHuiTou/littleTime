@@ -8,6 +8,6 @@ class AuthenticationUtilsTest {
 
     @Test
     void getIpFromHttp() {
-        
+
     }
 }

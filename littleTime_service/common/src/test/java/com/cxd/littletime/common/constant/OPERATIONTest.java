@@ -28,12 +28,12 @@ public class OPERATIONTest {
      */
     @Test
     public void testToString() throws Exception {
-        Assert.assertEquals(OPERATION.REGISTER.toString(),"REGISTER");
-        Assert.assertEquals(OPERATION.LOGIN.toString(),"LOGIN");
-        Assert.assertEquals(OPERATION.CHANGE_PASSWORD.toString(), "CHANGE_PASSWORD");
-        Assert.assertEquals(OPERATION.DELETE_PASSWORD.toString(), "DELETE_PASSWORD");
-        Assert.assertEquals(OPERATION.ENCRYPT.toString(), "ENCRYPT");
-        Assert.assertEquals(OPERATION.DECRYPT.toString(),"DECRYPT");
+        Assert.assertEquals("REGISTER",OPERATION.REGISTER.toString());
+        Assert.assertEquals("LOGIN",OPERATION.LOGIN.toString());
+        Assert.assertEquals("CHANGE_PASSWORD",OPERATION.CHANGE_PASSWORD.toString());
+        Assert.assertEquals("DELETE_PASSWORD",OPERATION.DELETE_PASSWORD.toString());
+        Assert.assertEquals("ENCRYPT",OPERATION.ENCRYPT.toString());
+        Assert.assertEquals("DECRYPT",OPERATION.DECRYPT.toString());
     }
 
     /**
@@ -41,12 +41,12 @@ public class OPERATIONTest {
      */
     @Test
     public void testGetNameByIndex() throws Exception {
-        Assert.assertEquals(OPERATION.getNameByIndex(0),OPERATION.REGISTER);
-        Assert.assertEquals(OPERATION.getNameByIndex(1),OPERATION.LOGIN);
-        Assert.assertEquals(OPERATION.getNameByIndex(2),OPERATION.CHANGE_PASSWORD);
-        Assert.assertEquals(OPERATION.getNameByIndex(3),OPERATION.DELETE_PASSWORD);
-        Assert.assertEquals(OPERATION.getNameByIndex(4),OPERATION.ENCRYPT);
-        Assert.assertEquals(OPERATION.getNameByIndex(5),OPERATION.DECRYPT);
+        Assert.assertEquals(OPERATION.REGISTER,OPERATION.getNameByIndex(0));
+        Assert.assertEquals(OPERATION.LOGIN,OPERATION.getNameByIndex(1));
+        Assert.assertEquals(OPERATION.CHANGE_PASSWORD,OPERATION.getNameByIndex(2));
+        Assert.assertEquals(OPERATION.DELETE_PASSWORD,OPERATION.getNameByIndex(3));
+        Assert.assertEquals(OPERATION.ENCRYPT,OPERATION.getNameByIndex(4));
+        Assert.assertEquals(OPERATION.DECRYPT,OPERATION.getNameByIndex(5));
     }
 
 

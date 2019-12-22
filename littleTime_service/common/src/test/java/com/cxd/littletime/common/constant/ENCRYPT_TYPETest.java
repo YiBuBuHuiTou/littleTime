@@ -27,9 +27,9 @@ public class ENCRYPT_TYPETest {
 
     @Test
     public void testToString() {
-        Assert.assertEquals(ENCRYPT_TYPE.MD5.toString(),"MD5");
-        Assert.assertEquals(ENCRYPT_TYPE.SHA256.toString(),"SHA256");
-        Assert.assertEquals(ENCRYPT_TYPE.AES.toString(),"AES");
+        Assert.assertEquals("MD5", ENCRYPT_TYPE.MD5.toString());
+        Assert.assertEquals("SHA256", ENCRYPT_TYPE.SHA256.toString());
+        Assert.assertEquals("AES",ENCRYPT_TYPE.AES.toString());
     }
 
     @Test
@@ -42,8 +42,8 @@ public class ENCRYPT_TYPETest {
 
     @Test
     public void testGetIndex() {
-        Assert.assertEquals(ENCRYPT_TYPE.MD5.getIndex(),0);
-        Assert.assertEquals(ENCRYPT_TYPE.SHA256.getIndex(),1);
-        Assert.assertEquals(ENCRYPT_TYPE.AES.getIndex(),2);
+        Assert.assertEquals(0,ENCRYPT_TYPE.MD5.getIndex());
+        Assert.assertEquals(1,ENCRYPT_TYPE.SHA256.getIndex());
+        Assert.assertEquals(2,ENCRYPT_TYPE.AES.getIndex());
     }
 }

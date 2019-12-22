@@ -30,8 +30,8 @@ public class AUTH_TYPETest {
      */
     @Test
     public void testToString() throws Exception {
-        Assert.assertEquals(AUTH_TYPE.ENCRYPTED.toString(), "ENCRYPTED");
-        Assert.assertEquals(AUTH_TYPE.DECRYPTED.toString(), "DECRYPTED");
+        Assert.assertEquals("ENCRYPTED",AUTH_TYPE.ENCRYPTED.toString());
+        Assert.assertEquals("DECRYPTED",AUTH_TYPE.DECRYPTED.toString());
     }
 
     /**
@@ -39,9 +39,8 @@ public class AUTH_TYPETest {
      */
     @Test
     public void testGetNameByIndex() throws Exception {
-        Assert.assertEquals(AUTH_TYPE.getNameByIndex(0),AUTH_TYPE.ENCRYPTED);
-        Assert.assertEquals(AUTH_TYPE.getNameByIndex(1),AUTH_TYPE.DECRYPTED);
+        Assert.assertEquals(AUTH_TYPE.ENCRYPTED, AUTH_TYPE.getNameByIndex(0));
+        Assert.assertEquals(AUTH_TYPE.DECRYPTED, AUTH_TYPE.getNameByIndex(1));
     }
-
 
 } 
