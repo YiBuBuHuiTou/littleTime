@@ -13,7 +13,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>authentication</name>
     <packaging>war</packaging>
-    <description>authentication for Wei Xin little grame - littleTime</description>
+    <description>authentication for Wei Xin little programe - littleTime</description>
 
     <properties>
         <java.version>1.8</java.version>
