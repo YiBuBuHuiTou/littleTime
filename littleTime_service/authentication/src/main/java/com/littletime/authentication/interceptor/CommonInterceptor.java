@@ -2,6 +2,7 @@ package com.littletime.authentication.interceptor;
 
 import com.cxd.littletime.common.util.IpUtils;
 import com.littletime.authentication.common.AuthenticationUtils;
+import com.littletime.authentication.config.CustomConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +20,7 @@ import java.util.List;
 public class CommonInterceptor extends HandlerInterceptorAdapter {
 
     @Autowired
-    private List<String> whiteList;
-
-    @Autowired
-    private List<String> blackList;
+    private CustomConfig customConfig;
 
     private static Logger LOGGER = LoggerFactory.getLogger(CommonInterceptor.class);
     public CommonInterceptor() {
@@ -43,6 +41,8 @@ public class CommonInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         System.out.println("interceptor start");
         boolean isIntercept = true;
+        List<String> whiteList = customConfig.getWhiteList();
+        List<String> blackList = customConfig.getBlackList();
         //黑名单和白名单拦截
         String ip = AuthenticationUtils.getIpFromHttp(request);
         if (whiteList != null) {
