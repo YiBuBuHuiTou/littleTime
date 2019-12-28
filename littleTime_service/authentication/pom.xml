@@ -49,7 +49,7 @@
         <!-- 配置文件依赖 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId> spring-boot-configuration-processor</artifactId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
             <optional> true </optional>
         </dependency>
         <!-- maradb 驱动依赖-->
