@@ -1,5 +1,6 @@
 package com.littletime.authentication.common;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.i18n.LocaleContext;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class I18nUtils {
+
 
     private static MessageSource messageSource;
 
@@ -32,6 +34,21 @@ public class I18nUtils {
             return messageSource.getMessage(key,null, LocaleContextHolder.getLocale());
         }catch (NoSuchMessageException e) {
            // e.printStackTrace();
+
+            return "";
+        }
+    }
+
+    /**
+     * 国际化message获取
+     * @param key
+     * @return
+     */
+    public static String getMessage(String key,String ... values) {
+        try{
+            return messageSource.getMessage(key, values, LocaleContextHolder.getLocale());
+        }catch (NoSuchMessageException e) {
+            // e.printStackTrace();
 
             return "";
         }

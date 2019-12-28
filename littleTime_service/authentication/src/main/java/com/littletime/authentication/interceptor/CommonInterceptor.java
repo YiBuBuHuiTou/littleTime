@@ -2,6 +2,7 @@ package com.littletime.authentication.interceptor;
 
 import com.cxd.littletime.common.util.IpUtils;
 import com.littletime.authentication.common.AuthenticationUtils;
+import com.littletime.authentication.common.I18nUtils;
 import com.littletime.authentication.config.CustomConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,9 +54,9 @@ public class CommonInterceptor extends HandlerInterceptorAdapter {
             boolean isInWhiteDb = false;
             if (isInWhiteConf || isInWhiteDb) {
                 isIntercept = false;
-                LOGGER.info("白名单校验：该用户ip处于于白名单中，不拦截。");
+                LOGGER.info(I18nUtils.getMessage("AUTHENTICATION_IP_IN_WHITE_LIST"));
             } else {
-                LOGGER.warn("白名单校验：该用户不在于白名单中，该请求已被拦截。 被拦截ip：" + ip);
+                LOGGER.warn(I18nUtils.getMessage("AUTHENTICATION_IP_NOT_IN_WHITE_LIST", ip));
             }
         }
 
@@ -67,14 +68,14 @@ public class CommonInterceptor extends HandlerInterceptorAdapter {
             boolean isInBlackDb = false;
             if (!isInBlackConf && !isInBlackDb) {
                 isIntercept = false;
-                LOGGER.info("黑名单校验：该用户ip不在黑名单中，不拦截");
+                LOGGER.info(I18nUtils.getMessage("AUTHENTICATION_IP_NOT_IN_BLACK_LIST"));
             } else {
-                LOGGER.warn("黑名单校验：该用户ip不处于黑名单中，该请求已被拦截。 被拦截ip：" + ip);
+                LOGGER.warn(I18nUtils.getMessage("AUTHENTICATION_IP_IN_BLACK_LIST", ip));
             }
         }
 
 
-        return isIntercept;
+        return !isIntercept;
     }
 
     /**
