@@ -10,17 +10,17 @@ import java.util.Date;
  * @author YiBuBuHuiTou
  */
 @Entity
-@Table(name = "user_info")
-public class UserInfo {
+@Table(name = "user")
+public class User {
 
     // 主键 并设置自增
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
+    @Column(name = "id", updatable = false)
     private Long id;
 
     //用户名
-    @Column(name = "user_id", unique = true, nullable = false,length = 32)
+    @Column(name = "user_name", unique = true, nullable = false,length = 32)
     private String userName;
 
     // 身份证
@@ -36,8 +36,9 @@ public class UserInfo {
     private int role;
 
     // 所属group
-    @Column(name = "tenant", length = 16)
-    private String tenant;
+    @ManyToOne(targetEntity = Tenant.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "tenant_id", nullable = false)
+    private Tenant tenant;
 
     // token
     @Column(name = "toekn", unique = true,length = 128)
@@ -98,11 +99,11 @@ public class UserInfo {
         this.role = role;
     }
 
-    public String getTenant() {
+    public Tenant getTenant() {
         return tenant;
     }
 
-    public void setTenant(String tenant) {
+    public void setTenant(Tenant tenant) {
         this.tenant = tenant;
     }
 
