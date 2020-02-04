@@ -23,6 +23,7 @@ public class CommonInterceptor extends HandlerInterceptorAdapter {
     @Autowired
     private CustomConfig customConfig;
 
+    //LOGGER
     private static Logger LOGGER = LoggerFactory.getLogger(CommonInterceptor.class);
     public CommonInterceptor() {
         super();

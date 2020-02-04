@@ -16,6 +16,7 @@ import java.util.Locale;
 
 /**
  * @author YiBuBuHuiTou
+ * 拦截器配置类
  */
 @Configuration
 public class InterceptorConfig implements WebMvcConfigurer {

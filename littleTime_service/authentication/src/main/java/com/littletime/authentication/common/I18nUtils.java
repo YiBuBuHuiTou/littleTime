@@ -34,7 +34,6 @@ public class I18nUtils {
             return messageSource.getMessage(key,null, LocaleContextHolder.getLocale());
         }catch (NoSuchMessageException e) {
            // e.printStackTrace();
-
             return "";
         }
     }
@@ -49,7 +48,6 @@ public class I18nUtils {
             return messageSource.getMessage(key, values, LocaleContextHolder.getLocale());
         }catch (NoSuchMessageException e) {
             // e.printStackTrace();
-
             return "";
         }
     }

@@ -1,9 +1,18 @@
 package com.littletime.authentication.Bean;
 
+import com.cxd.littletime.common.constant.ENCRYPT_TYPE;
+import com.cxd.littletime.common.util.CryptoUtils;
+import com.cxd.littletime.common.util.StringUtils;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 
 /**
@@ -11,7 +20,13 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "user")
-public class User {
+public class User implements Serializable {
+
+    // 序列化类版本号
+    private static final long serialVersionUID = 1L;
+
+    //log
+    private static Logger LOGGER = LoggerFactory.getLogger(User.class);
 
     // 主键 并设置自增
     @Id
@@ -31,13 +46,18 @@ public class User {
     @Column(name = "password", nullable = false, length = 255)
     private String password;
 
-    //权限
+    //角色(administrator:0 , infra_admin: 1 , tenant_admin: 2, tenant_user: 3)
     @Column(name = "role", length = 8)
     private int role;
 
+    // 权限
+    @Column(name = "privilege", length = 8)
+    private int privilege;
+
     // 所属group
-    @ManyToOne(targetEntity = Tenant.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "tenant_id", nullable = false)
+    //@ManyToOne(targetEntity = Tenant.class, fetch = FetchType.LAZY)  使用延迟加载回导致反序列化失败
+    @ManyToOne(targetEntity = Tenant.class, fetch = FetchType.EAGER)
+    @JoinColumn(name = "tenant_id")
     private Tenant tenant;
 
     // token
@@ -45,16 +65,18 @@ public class User {
     private String token;
 
     //token生成时间
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss:SSS")
     @Column(name = "token_time")
     private Date tokenTime;
 
     // 创建时间
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss:SSS")
     @CreationTimestamp
-    @Column(name = "create_date", updatable = false)
+    @Column(name = "create_date", updatable = false, nullable = false)
     private Date createDate;
 
     // 更新时间
-
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss:SSS")
     @Column(name = "update_date")
     @UpdateTimestamp
     private Date updateDate;
@@ -88,7 +110,16 @@ public class User {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        if (StringUtils.isEmpty(password)) {
+            this.password = "";
+        } else {
+            try {
+                this.password = CryptoUtils.hashAlgorithm(ENCRYPT_TYPE.SHA256, password);
+            } catch (NoSuchAlgorithmException e) {
+                this.password = "";
+                LOGGER.error("encrypt password  failed. ", e);
+            }
+        }
     }
 
     public int getRole() {
@@ -97,6 +128,14 @@ public class User {
 
     public void setRole(int role) {
         this.role = role;
+    }
+
+    public int getPrivilege() {
+        return privilege;
+    }
+
+    public void setPrivilege(int privilege) {
+        this.privilege = privilege;
     }
 
     public Tenant getTenant() {

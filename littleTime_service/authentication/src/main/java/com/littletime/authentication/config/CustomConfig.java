@@ -9,6 +9,7 @@ import java.util.Map;
 
 /**
  * @author YiBuBuHuiTou
+ * 自定义配置类
  */
 
 @Component

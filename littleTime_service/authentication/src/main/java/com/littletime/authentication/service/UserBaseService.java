@@ -1,6 +1,9 @@
 package com.littletime.authentication.service;
 
 import com.littletime.authentication.Bean.User;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -14,7 +17,7 @@ public interface UserBaseService {
      * 追加用户
      * @return
      */
-    Boolean addUser(User user);
+    User addUser(User user, int tenantId);
 
     /**
      * 删除用户
@@ -25,7 +28,7 @@ public interface UserBaseService {
     /**
      *修改用户
      */
-    Boolean updateUser(User user);
+    User updateUser(User user);
 
     /**
      * 检索所有用户

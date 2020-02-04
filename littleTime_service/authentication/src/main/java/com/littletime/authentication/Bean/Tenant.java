@@ -1,10 +1,12 @@
 package com.littletime.authentication.Bean;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GeneratorType;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -12,7 +14,9 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "tenant")
-public class Tenant {
+public class Tenant implements Serializable {
+    // 序列化类版本号
+    private static final long serialVersionUID = 1L;
 
     /**
      * tenant id
@@ -21,6 +25,12 @@ public class Tenant {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "tenant_id", updatable = false)
     private int tenantId;
+
+    /**
+     * tenantUUID
+     */
+    @Column(name = "uuid", updatable = false, unique = true)
+    private String tenantUUId;
 
     /**
      *  tenant description
@@ -62,6 +72,14 @@ public class Tenant {
 
     public void setTenantId(int tenantId) {
         this.tenantId = tenantId;
+    }
+
+    public String getTenantUUId() {
+        return tenantUUId;
+    }
+
+    public void setTenantUUId(String tenantUUId) {
+        this.tenantUUId = tenantUUId;
     }
 
     public String getDescription() {
