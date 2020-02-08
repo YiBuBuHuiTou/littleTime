@@ -5,6 +5,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 /**
@@ -23,7 +24,7 @@ public interface UserBaseService {
      * 删除用户
      * @return
      */
-    Boolean deleteUserById(Long user_id);
+    boolean deleteUserByCredential(String credential);
 
     /**
      *修改用户
@@ -43,4 +44,17 @@ public interface UserBaseService {
      */
     User findById(Long user_id);
 
+    /**
+     * 登录用户
+     * @param user
+     * @return
+     */
+    boolean signIn(User user);
+
+    /**
+     * 生成jwt token
+     * @param ttl
+     * @return
+     */
+    String generateToken(User user, long ttl, long redisTTL);
 }

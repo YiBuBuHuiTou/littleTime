@@ -16,12 +16,10 @@ public class StringUtilsTest {
 
     @Before
     public void before() throws Exception {
-        System.out.println("被测试类: " + testInfo.getClassName() + ", 测试用例名: " + testInfo.getMethodName() + "开始测试");
     }
 
     @After
     public void after() throws Exception {
-        System.out.println("被测试类: " + testInfo.getClassName() + ", 测试用例名: " + testInfo.getMethodName() + "结束测试");
     }
 
     /**

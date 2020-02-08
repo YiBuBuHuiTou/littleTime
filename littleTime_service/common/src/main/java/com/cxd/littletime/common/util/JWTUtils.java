@@ -34,7 +34,7 @@ public class JWTUtils {
                 signWith(signatureAlgorithm, getSecurityKey());
 
         if (ttlMillis > 0) {
-            long expireMillis = nowMillis + ttlMillis;
+            long expireMillis = nowMillis + ttlMillis * 1000;
             Date expireDate = new Date(expireMillis);
             jwtBuilder.setExpiration(expireDate);
         }

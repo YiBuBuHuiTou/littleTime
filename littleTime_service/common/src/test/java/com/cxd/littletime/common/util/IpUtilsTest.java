@@ -19,8 +19,11 @@ public class IpUtilsTest {
     public void isIP() {
         String ip = "10.198.457.79";
         String lp = "546.88.11.255";
+        String ep = "10.10.10.0";
         Assert.assertFalse(IpUtils.isIP(lp));
         Assert.assertFalse(IpUtils.isIP(ip));
+        Assert.assertTrue(IpUtils.isIP(ep));
+
     }
 
     @Test

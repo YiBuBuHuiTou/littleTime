@@ -60,8 +60,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
         List<String> interceptorEnableList = new ArrayList<String>();
         // 设置跳过拦截器的list
         List<String> interceptorDisableList = new ArrayList<String>();
-        interceptorEnableList.add("/*");
-        interceptorDisableList.add("/test");
+        interceptorEnableList.add("/authentication/*");
         // 注册拦截器规则的同时注入spring ，使用上面的getCommonInterceptor方法获取拦截器实例
         registry.addInterceptor(getCommonInterceptor()).addPathPatterns(interceptorEnableList).excludePathPatterns(interceptorDisableList);
         //添加国际化拦截器

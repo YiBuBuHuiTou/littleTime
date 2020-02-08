@@ -1,9 +1,14 @@
 package com.littletime.authentication.interceptor;
 
 import com.cxd.littletime.common.util.IpUtils;
+import com.cxd.littletime.common.util.StringUtils;
+import com.littletime.authentication.Bean.WhiteList;
 import com.littletime.authentication.common.AuthenticationUtils;
 import com.littletime.authentication.common.I18nUtils;
 import com.littletime.authentication.config.CustomConfig;
+import com.littletime.authentication.dao.BlackListDao;
+import com.littletime.authentication.dao.WhiteListDao;
+import com.littletime.authentication.service.IPTableService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +24,13 @@ import java.util.List;
  * 通用拦截器
  */
 public class CommonInterceptor extends HandlerInterceptorAdapter {
-
     @Autowired
-    private CustomConfig customConfig;
+    private IPTableService ipTableService;
 
     //LOGGER
     private static Logger LOGGER = LoggerFactory.getLogger(CommonInterceptor.class);
+
+
     public CommonInterceptor() {
         super();
     }
@@ -42,41 +48,13 @@ public class CommonInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         System.out.println("interceptor start");
-        boolean isIntercept = true;
-        List<String> whiteList = customConfig.getWhiteList();
-        List<String> blackList = customConfig.getBlackList();
-        //黑名单和白名单拦截
         String ip = AuthenticationUtils.getIpFromHttp(request);
-        if (whiteList != null) {
-            // 配置文件白名单
-            boolean isInWhiteConf = isIpInIpList(ip, whiteList);
-            // 数据白名单
-            // TODO
-            boolean isInWhiteDb = false;
-            if (isInWhiteConf || isInWhiteDb) {
-                isIntercept = false;
-                LOGGER.info(I18nUtils.getMessage("AUTHENTICATION_IP_IN_WHITE_LIST"));
-            } else {
-                LOGGER.warn(I18nUtils.getMessage("AUTHENTICATION_IP_NOT_IN_WHITE_LIST", ip));
-            }
+        String isIntercept = ipTableService.checkIpIsValid(ip);
+        if (isIntercept.equals("legal")) {
+            return true;
+        } else {
+            return false;
         }
-
-        if (blackList != null) {
-            //配置文件黑名单
-            boolean isInBlackConf = isIpInIpList(ip,blackList);
-            //数据库黑名单
-            // TODO
-            boolean isInBlackDb = false;
-            if (!isInBlackConf && !isInBlackDb) {
-                isIntercept = false;
-                LOGGER.info(I18nUtils.getMessage("AUTHENTICATION_IP_NOT_IN_BLACK_LIST"));
-            } else {
-                LOGGER.warn(I18nUtils.getMessage("AUTHENTICATION_IP_IN_BLACK_LIST", ip));
-            }
-        }
-
-
-        return !isIntercept;
     }
 
     /**
@@ -112,35 +90,5 @@ public class CommonInterceptor extends HandlerInterceptorAdapter {
         super.afterConcurrentHandlingStarted(request, response, handler);
     }
 
-    /**
-     * 判断IP是否在名单里
-     * @param ip
-     * @param iptables
-     * @return
-     */
-    private boolean isIpInIpList(String ip, List<String> iptables) {
-        boolean isIpInIpList = false;
 
-        for (String ipStr : iptables) {
-            if (IpUtils.isSingleIP(ipStr) && !IpUtils.isIP(ipStr)) {
-                continue;
-            } else if (IpUtils.isSingleIP(ipStr)) {
-                if (ip.equals(ipStr)) {
-                    isIpInIpList = true;
-                    break;
-                }
-            } else {
-                long ipNum = IpUtils.ip2Long(ip);
-                String[] ips = ipStr.split("-");
-                long start = IpUtils.ip2Long(ips[0]);
-                long end = IpUtils.ip2Long(ips[1]);
-                long currentIp = IpUtils.ip2Long(ip);
-                if (start != 0L && end != 0L && currentIp >= start && currentIp <= end) {
-                    isIpInIpList = true;
-                    break;
-                }
-            }
-        }
-        return isIpInIpList;
-    }
 }

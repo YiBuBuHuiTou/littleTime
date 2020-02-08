@@ -4,7 +4,11 @@ import com.littletime.authentication.Bean.Tenant;
 import com.littletime.authentication.service.TenantBaseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.stereotype.Service;
 
+@CacheConfig(cacheNames = "auth_tenant")
+@Service
 public class TenantBaseServiceImpl implements TenantBaseService {
 
     private static Logger LOGGER = LoggerFactory.getLogger(TenantBaseServiceImpl.class);

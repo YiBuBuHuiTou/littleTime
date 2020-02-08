@@ -2,7 +2,7 @@ package com.littletime.authentication.filter;
 
 
 import com.cxd.littletime.common.util.JWTUtils;
-import org.springframework.stereotype.Component;
+import com.cxd.littletime.common.util.StringUtils;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -23,15 +23,19 @@ public class CommonFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse)servletResponse;
         response.setHeader("Access-Control-Allow-Origin", "*");
         String jwt = request.getHeader("Authorization");
-        boolean valid = JWTUtils.validateJWT(jwt);
+        boolean valid = true;
+        // token 不存在时不校验（用户未登录）
+        if (!StringUtils.isEmpty(jwt)) {
+            valid = JWTUtils.validateJWT(jwt);
+        }
         if (valid) {
             //TODO 可以刷新token 校验其他数据
             System.out.println("token 校验成功");
-            filterChain.doFilter(servletRequest, servletResponse);
+            filterChain.doFilter(request, response);
         } else {
             //TODO token 无效时处理【暂不处理】
             System.out.println("token 校验失败");
-            filterChain.doFilter(servletRequest, servletResponse);
+            filterChain.doFilter(request, response);
         }
     }
 

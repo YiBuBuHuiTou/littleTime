@@ -20,12 +20,12 @@ public class CryptoUtilsTest {
     }
 
 
-    @Test(timeout = 400)
+    @Test(timeout = 1000)
     public void symmetricEncrypt() {
         Assert.assertEquals("qFQ90G/277RVgLPj1bqG9g==", CryptoUtils.symmetricEncrypt("justyou", ENCRYPT_TYPE.AES,"AES加密测试"));
     }
 
-    @Test(timeout = 400)
+    @Test(timeout = 1000)
     public void symmetricDecrypt() {
         Assert.assertEquals("AES加密测试", CryptoUtils.symmetricDecrypt("justyou",ENCRYPT_TYPE.AES,"qFQ90G/277RVgLPj1bqG9g=="));
     }
@@ -46,7 +46,7 @@ public class CryptoUtilsTest {
     }
     // 测试私有方法， 私有方法不测
     @Deprecated
-    @Test(timeout = 400)
+    @Test(timeout = 1000)
     public void aesEncrypt() throws Exception {
         Method method = new CryptoUtils().getClass().getDeclaredMethod("aesEncrypt", String.class, String.class,String.class);
         method.setAccessible(true);

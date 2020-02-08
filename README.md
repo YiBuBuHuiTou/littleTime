@@ -27,3 +27,7 @@ Axure RP 9
 
 被授权人（License）:AX9003
 授权码（Key）：NT/mS+29Kgtw46K0kQBgE3X5qzPwKhSLSM20lhdVQ2bH593Quez3lphi8AAgA1Ax
+
+navicat 15 注册机（使用方法请百度）
+链接：https://pan.baidu.com/s/1yanOwgyLe3B0mKwH4WgupQ 
+提取码：8xob

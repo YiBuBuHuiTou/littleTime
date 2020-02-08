@@ -15,6 +15,7 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.Base64;
 
 /**
  * @author YiBuBuHuiTou
@@ -160,7 +161,7 @@ public class CryptoUtils {
             // 密码器加密数据
             byte[] encrypted = cipher.doFinal(contentBytes);
             // 将加密后的字节数组转为Base64码
-            result =  new BASE64Encoder().encode(encrypted);
+            result = Base64.getEncoder().encodeToString(encrypted);
         } catch (NoSuchPaddingException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -206,7 +207,7 @@ public class CryptoUtils {
             } else {
                 return null;
             }
-            byte[] decrypted = cipher.doFinal(new BASE64Decoder().decodeBuffer(content));
+            byte[] decrypted = cipher.doFinal(Base64.getDecoder().decode(content));
             result = new String(decrypted);
         } catch (NoSuchPaddingException e) {
             e.printStackTrace();
