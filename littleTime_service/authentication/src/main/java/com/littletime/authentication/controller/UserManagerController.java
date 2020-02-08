@@ -5,21 +5,22 @@ import com.littletime.authentication.Bean.User;
 import com.littletime.authentication.common.AuthenticationUtils;
 import com.littletime.authentication.common.I18nUtils;
 import com.littletime.authentication.common.rabbitmq.RabbitCommonSender;
+import com.littletime.authentication.common.result.CommonResultBean;
+import com.littletime.authentication.common.result.FailResultBean;
+import com.littletime.authentication.common.result.SuccessResultBean;
+import com.littletime.authentication.service.IPTableService;
 import com.littletime.authentication.service.UserBaseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -37,14 +38,22 @@ public class UserManagerController {
     // 用户service
     private UserBaseService userBaseService;
 
+    //黑白名单service
+    private IPTableService ipTableService;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(UserManagerController.class);
+
+    private static final long DEFAULT_TOKEN_TTL = 60;
+
+    private static final long DEFAULT_REDIS_TTL = 60*24*15;
 
     @Autowired
     UserManagerController(RabbitCommonSender rabbitCommonSender, UserBaseService userBaseService,
-                          HttpServletRequest request) {
+                          HttpServletRequest request, IPTableService ipTableService) {
         this.rabbitCommonSender = rabbitCommonSender;
         this.userBaseService = userBaseService;
         this.request = request;
+        this.ipTableService = ipTableService;
     }
 
     /**
@@ -54,10 +63,11 @@ public class UserManagerController {
     @RequestMapping(value = "/authentication/register", method = RequestMethod.POST)
     public String register(@RequestBody Map<String, String> body) throws IOException {
 
-        String result = "";
+        boolean resultFlg = false;
+        CommonResultBean resultBean = null;
         User newUser = AuthenticationUtils.buildSimpleUser(body);
         if(newUser == null || newUser.getUserName() == null) {
-            result = "fail";
+//            result = "fail";
         } else {
             int tenantId = -1;
             String tenantIdStr = body.get("tenantId");
@@ -73,19 +83,127 @@ public class UserManagerController {
             }
             User user =  userBaseService.addUser(newUser, tenantId);
            if (user != null) {
-                result = "success";
-           } else {
-               result = "fail";
+               resultFlg = true;
            }
         }
-        return result;
+        if (resultFlg) {
+            resultBean = new SuccessResultBean();
+            resultBean.setMessage(I18nUtils.getMessage("AUTHENTICATION_REGISTER_SUCCESS"));
+        } else {
+            resultBean = new FailResultBean();
+            resultBean.setMessage(I18nUtils.getMessage("AUTHENTICATION_REGISTER_FAIL"));
+        }
+        return resultBean.toString();
     }
 
-    @RequestMapping(value="/authentication/addUser", method = RequestMethod.POST)
-    public String addUser() {
-        return I18nUtils.getMessage("AUTHENTICATION_IP_IN_BLACK_LIST","aaa");
+    /**
+     * 登录用户
+     * @return
+     */
+    @RequestMapping(value = "/authentication/signIn", method = RequestMethod.POST)
+    public String signIn(@RequestBody Map<String, String> userInfo) {
+        String userName = userInfo.get("userName");
+        String password = userInfo.get("password");
+        User user = AuthenticationUtils.buildSimpleUser(userInfo);
+        boolean isValid = false;
+        CommonResultBean resultBean = null;
+        if (!StringUtils.isEmpty(userName)) {
+           isValid = userBaseService.signIn(user);
+        }
+        if (isValid) {
+            long tokenTTL = DEFAULT_TOKEN_TTL;
+            long redisTTL = DEFAULT_REDIS_TTL;
+            try {
+                tokenTTL = Long.parseLong(userInfo.get("tokenTTL").trim());
+            } catch (Exception e) {
+                // do nothing
+            }
+            try {
+                tokenTTL = Long.parseLong(userInfo.get("redisTTL").trim());
+            } catch (Exception e) {
+                // do nothing
+            }
+            String token = userBaseService.generateToken(user, tokenTTL, redisTTL);
+
+            resultBean = new SuccessResultBean();
+            resultBean.setMessage(I18nUtils.getMessage("AUTHENTICATION_SIGN_IN_SUCCESS"));
+            return resultBean.toString();
+        } else {
+            resultBean = new FailResultBean();
+            resultBean.setMessage(I18nUtils.getMessage("AUTHENTICATION_SIGN_IN_FAIL"));
+            return resultBean.toString();
+        }
     }
 
+    /**
+     * 登出
+     * @return
+     */
+    @RequestMapping(value = "/authentication/signOut", method = RequestMethod.POST)
+    public String signOut(@RequestBody String credential) {
+        //TODO 清除用户登录信息
+        return "";
+    }
+
+    /**
+     * 注销用户
+     * @return
+     */
+    @RequestMapping(value = "/authentication/releaseUser", method = RequestMethod.POST)
+    public String releaseUser(@RequestBody String credential) {
+        //TODO 注销用户
+        ipTableService.deleteFromWhiteList(1);
+        return "";
+    }
+
+    /**
+     * 追加子用户
+     * @return
+     */
+    @RequestMapping(value = "/authentication/addChildUsers", method = RequestMethod.POST)
+    public String addChildUsers(@RequestBody List<Map<String, String>> userInfoList) {
+        //TODO
+        return "";
+    }
+
+    /**
+     *
+     * @return
+     */
+    @RequestMapping(value = "/authentication/checkUser", method = RequestMethod.POST)
+    public String checkUser(@RequestBody Map<String, String> userInfo) {
+        //TODO 判断 是否用户本人
+        return "";
+    }
+
+
+
+    /**
+     * 更新用户信息
+     * @param userInfo
+     * @return
+     */
+    @RequestMapping(value = "/authentication/updateUser", method = RequestMethod.POST)
+    public String updateUser(@RequestBody Map<String, String> userInfo) {
+        return "";
+    }
+
+    /**
+     * 更新子用户信息
+     * @param userInfoList
+     * @return
+     */
+    @RequestMapping(value = "/authentication/updateChildUsers", method = RequestMethod.POST)
+    public String updateChildUsers(@RequestBody List<Map<String, String>> userInfoList) {
+        return "";
+    }
+
+
+
+    /**
+     * test
+     * @return
+     */
     @RequestMapping(value="/test")
     public String test() {
         rabbitCommonSender.directSend();
@@ -94,8 +212,4 @@ public class UserManagerController {
         return "test";
     }
 
-    @RequestMapping(value="/test1")
-    public String test1() {
-        return I18nUtils.getMessage("AUTHENTICATION_IP_NOT_IN_BLACK_LIST");
-    }
 }
