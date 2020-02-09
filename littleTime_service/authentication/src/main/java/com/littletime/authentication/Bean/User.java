@@ -61,7 +61,7 @@ public class User implements Serializable {
     private Tenant tenant;
 
     // token
-    @Column(name = "toekn", unique = true,length = 128)
+    @Column(name = "token", unique = true,length = 255)
     private String token;
 
     //token生成时间
@@ -152,6 +152,7 @@ public class User implements Serializable {
 
     public void setToken(String token) {
         this.token = token;
+        this.tokenTime = new Date();
     }
 
     public Date getTokenTime() {

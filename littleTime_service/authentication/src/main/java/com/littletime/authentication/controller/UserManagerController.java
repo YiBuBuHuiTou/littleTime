@@ -62,12 +62,13 @@ public class UserManagerController {
      */
     @RequestMapping(value = "/authentication/register", method = RequestMethod.POST)
     public String register(@RequestBody Map<String, String> body) throws IOException {
-
+        StringBuilder errMsg = new StringBuilder();
         boolean resultFlg = false;
         CommonResultBean resultBean = null;
         User newUser = AuthenticationUtils.buildSimpleUser(body);
         if(newUser == null || newUser.getUserName() == null) {
 //            result = "fail";
+            errMsg.append("用户名为空。");
         } else {
             int tenantId = -1;
             String tenantIdStr = body.get("tenantId");
@@ -77,21 +78,27 @@ public class UserManagerController {
             try {
                 if (!StringUtils.isEmpty(tenantIdStr)) {
                     tenantId = Integer.parseInt(tenantIdStr);
+                } else {
+                    LOGGER.error("tenantId is null. operation[register] can not be succeed.");
                 }
             } catch (NumberFormatException e) {
                 LOGGER.error("tenantId is invalid. ", e);
             }
-            User user =  userBaseService.addUser(newUser, tenantId);
-           if (user != null) {
-               resultFlg = true;
-           }
+            if (userBaseService.checkUserExist(newUser.getUserName())) {
+                errMsg.append("该用户名已存在。");
+            } else {
+                User user =  userBaseService.addUser(newUser, tenantId);
+                if (user != null) {
+                    resultFlg = true;
+                }
+            }
         }
         if (resultFlg) {
             resultBean = new SuccessResultBean();
             resultBean.setMessage(I18nUtils.getMessage("AUTHENTICATION_REGISTER_SUCCESS"));
         } else {
             resultBean = new FailResultBean();
-            resultBean.setMessage(I18nUtils.getMessage("AUTHENTICATION_REGISTER_FAIL"));
+            resultBean.setMessage(I18nUtils.getMessage("AUTHENTICATION_REGISTER_FAIL") + errMsg.toString());
         }
         return resultBean.toString();
     }
@@ -105,12 +112,12 @@ public class UserManagerController {
         String userName = userInfo.get("userName");
         String password = userInfo.get("password");
         User user = AuthenticationUtils.buildSimpleUser(userInfo);
-        boolean isValid = false;
+        User resultUser = null;
         CommonResultBean resultBean = null;
         if (!StringUtils.isEmpty(userName)) {
-           isValid = userBaseService.signIn(user);
+            resultUser = userBaseService.signIn(user);
         }
-        if (isValid) {
+        if (resultUser != null) {
             long tokenTTL = DEFAULT_TOKEN_TTL;
             long redisTTL = DEFAULT_REDIS_TTL;
             try {
@@ -123,8 +130,9 @@ public class UserManagerController {
             } catch (Exception e) {
                 // do nothing
             }
-            String token = userBaseService.generateToken(user, tokenTTL, redisTTL);
-
+            String token = userBaseService.generateToken(resultUser, tokenTTL, redisTTL);
+            resultUser.setToken(token);
+            userBaseService.updateUser(resultUser);
             resultBean = new SuccessResultBean();
             resultBean.setMessage(I18nUtils.getMessage("AUTHENTICATION_SIGN_IN_SUCCESS"));
             return resultBean.toString();
@@ -150,9 +158,9 @@ public class UserManagerController {
      * @return
      */
     @RequestMapping(value = "/authentication/releaseUser", method = RequestMethod.POST)
-    public String releaseUser(@RequestBody String credential) {
+    public String releaseUser(@RequestBody Map<String, String> credential) {
         //TODO 注销用户
-        ipTableService.deleteFromWhiteList(1);
+        userBaseService.deleteUserByCredential(credential.get("credential"));
         return "";
     }
 
@@ -197,19 +205,4 @@ public class UserManagerController {
     public String updateChildUsers(@RequestBody List<Map<String, String>> userInfoList) {
         return "";
     }
-
-
-
-    /**
-     * test
-     * @return
-     */
-    @RequestMapping(value="/test")
-    public String test() {
-        rabbitCommonSender.directSend();
-        User user = userBaseService.findById(1L);
-        System.out.println(user.getCredential());
-        return "test";
-    }
-
 }

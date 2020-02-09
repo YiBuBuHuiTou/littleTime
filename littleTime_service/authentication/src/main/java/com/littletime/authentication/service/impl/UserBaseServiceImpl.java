@@ -1,8 +1,6 @@
 package com.littletime.authentication.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.cxd.littletime.common.constant.ENCRYPT_TYPE;
-import com.cxd.littletime.common.util.CryptoUtils;
 import com.cxd.littletime.common.util.JWTUtils;
 import com.cxd.littletime.common.util.StringUtils;
 import com.littletime.authentication.Bean.User;
@@ -16,8 +14,8 @@ import org.springframework.cache.annotation.*;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +31,6 @@ public class UserBaseServiceImpl implements UserBaseService {
 
     private static Logger LOGGER = LoggerFactory.getLogger(UserBaseServiceImpl.class);
 
-    private User targetUser = null;
     /**
      * 注入UserDao
      * @param userDao
@@ -100,28 +97,36 @@ public class UserBaseServiceImpl implements UserBaseService {
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Throwable.class)
     @Caching(
             evict = {
-                    @CacheEvict(key = "#root.target.targetUser.credential")
+                    @CacheEvict(key = "#result.userName",condition = "#result != null"),
+                    @CacheEvict(key = "#result.credential",condition = "#result != null")
             }
     )
-    public boolean deleteUserByCredential(String credential) {
-        boolean defaultResult = false;
+    public User deleteUserByCredential(String credential) {
+        User targetUser = null;
         if (!StringUtils.isEmpty(credential)) {
-            targetUser = userDao.findFirstByCredential(credential);
-            if (targetUser != null)  {
-                try {
-                    userDao.deleteByCredential(credential);
-                    defaultResult = true;
-                }catch (EmptyResultDataAccessException e) {
-                    LOGGER.error("no entity exits. credential = " + credential, e);
-                }
-            } else {
-                LOGGER.error("no entity exits. credential = " + credential);
-            }
-
+             targetUser = userDao.findFirstByCredential(credential);
         }
-        return defaultResult;
+        if (targetUser != null)  {
+            int result = -1;
+            try {
+               result =  userDao.deleteByCredential(credential);
+            }catch (EmptyResultDataAccessException e) {
+                LOGGER.error("no entity exits. credential = " + credential, e);
+            }
+            if (result == 1) {
+                return targetUser;
+            }
+            else {
+                return null;
+            }
+        } else {
+            LOGGER.error("no entity exits. credential = " + credential);
+            return null;
+        }
+
     }
 
     /**
@@ -130,7 +135,8 @@ public class UserBaseServiceImpl implements UserBaseService {
     @Override
     @Caching(
             put = {
-                    @CachePut(key = "#result.credential")
+                    @CachePut(key = "#result.credential"),
+                    @CachePut(key = "#result.userName")
             }
     )
     public User updateUser(User user) {
@@ -159,48 +165,51 @@ public class UserBaseServiceImpl implements UserBaseService {
     }
 
     /**
-     * 根据用户id查询用户信息
+     * 根据用户名查询用户信息
      *
-     * @param user_id 用户id
+     * @param userName 用户名
      * @return
      */
     @Override
     @Caching(
+            cacheable = {
+                    @Cacheable(key = "#userName", unless = "#result == null")
+            },
             put = {
-                    @CachePut(key = "#result.credential", unless = "#result == null"),
+                    @CachePut(key = "#result.credential", unless = "#result == null")
             }
     )
-    public User findById(Long user_id) {
-        if (user_id == null) {
+    public User findByUserName(String userName) {
+        if (StringUtils.isEmpty(userName)) {
             return null;
         }
-        return userDao.getOne(user_id);
+        return userDao.findFirstByUserName(userName);
     }
 
     @Override
-    public boolean signIn(User user) {
+    public User signIn(User user) {
         String userName = user.getUserName();
         String password = user.getPassword();
 
         if (StringUtils.isEmpty(userName)) {
-            return false;
+            return null;
         }
         User selectUser = userDao.findFirstByUserName(userName);
         if (selectUser == null) {
-            return false;
+            return null;
         }
 
         if (StringUtils.isEmpty(selectUser.getPassword()) && StringUtils.isEmpty(password)) {
-            return true;
+            return selectUser;
         }
 
         if (!StringUtils.isEmpty(selectUser.getPassword()) &&
                 !StringUtils.isEmpty(password) &&
                 selectUser.getPassword().equals(password)) {
 
-                return true;
+                return selectUser;
         }
-        return false;
+        return null;
     }
 
     @Override
@@ -220,4 +229,11 @@ public class UserBaseServiceImpl implements UserBaseService {
         }
         return token;
     }
+
+    @Override
+    public boolean checkUserExist(String userName) {
+        return userDao.existsByUserName(userName);
+    }
+
 }
+

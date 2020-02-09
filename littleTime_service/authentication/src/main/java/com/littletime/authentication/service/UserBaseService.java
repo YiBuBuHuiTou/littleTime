@@ -24,7 +24,7 @@ public interface UserBaseService {
      * 删除用户
      * @return
      */
-    boolean deleteUserByCredential(String credential);
+    User deleteUserByCredential(String credential);
 
     /**
      *修改用户
@@ -38,18 +38,18 @@ public interface UserBaseService {
     List<User> searchAllUsers();
 
     /**
-     * 根据用户id查询用户信息
-     * @param user_id 用户id
+     * 根据用户名查询用户信息
+     * @param userName 用户名
      * @return
      */
-    User findById(Long user_id);
+    User findByUserName(String userName);
 
     /**
      * 登录用户
      * @param user
      * @return
      */
-    boolean signIn(User user);
+    User signIn(User user);
 
     /**
      * 生成jwt token
@@ -57,4 +57,11 @@ public interface UserBaseService {
      * @return
      */
     String generateToken(User user, long ttl, long redisTTL);
+
+    /**
+     * 判断用户是否存在
+     * @param userName
+     * @return
+     */
+    boolean checkUserExist(String userName);
 }
