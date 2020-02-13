@@ -4,6 +4,7 @@ import com.littletime.authentication.interceptor.CommonInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -65,5 +66,13 @@ public class InterceptorConfig implements WebMvcConfigurer {
         registry.addInterceptor(getCommonInterceptor()).addPathPatterns(interceptorEnableList).excludePathPatterns(interceptorDisableList);
         //添加国际化拦截器
         registry.addInterceptor(localeChangeInterceptor());
+    }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/authentication/*")
+                .allowedHeaders("*")
+                .allowedOrigins("*")
+                .allowedMethods("*");
     }
 }
