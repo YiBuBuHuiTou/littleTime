@@ -1,33 +1,89 @@
 <template>
   <div class="login-container">
-    <el-form :model="loginForm" :rules="loginRules" label-position="left" label-width="70px" >
       <div class="title-container">
         <h3>用户登录</h3>
       </div>
-      <el-form-item label="用户名">
-        <el-input
-          v-model="loginForm.userName"
-          autocomplete="off"
-          placeholder="please input your account name"
-          name="userName"
-          prefix-icon="el-icon-user-solid"
-          clearable>
-        </el-input>
-      </el-form-item>
-      <el-form-item label="密码">
-        <el-input
-          v-model="loginForm.password"
-          autocomplete="off"
-          placeholder="please input your account's password"
-          name="password"
-          prefix-icon="el-icon-lock"
-          show-password
-          clearable>
-        </el-input>
-      </el-form-item>
-      <el-button type="primary" @click="showDaig=true">登录</el-button>
-      <el-button>注册</el-button>
-    </el-form>
+      <el-tabs v-model="activeName">
+        <el-tab-pane name="account" label="密码登录">
+          <el-row>
+            <el-col :span="24">
+              <el-form :model="accountForm" :rules="loginRules" label-position="left" >
+                <el-form-item>
+                  <el-input
+                    v-model="accountForm.userName"
+                    autocomplete="off"
+                    placeholder="账号/手机号/邮箱"
+                    name="userName"
+                    prefix-icon="el-icon-user-solid"
+                    clearable>
+                  </el-input>
+                </el-form-item>
+
+                <el-form-item>
+                  <el-input
+                    v-model="accountForm.password"
+                    autocomplete="off"
+                    placeholder="密码"
+                    name="password"
+                    prefix-icon="el-icon-lock"
+                    show-password
+                    clearable>
+                  </el-input>
+                </el-form-item>
+              </el-form>
+            </el-col>
+          </el-row>
+        </el-tab-pane>
+        <el-tab-pane name="sms" label="短信验证码登录">
+           <el-row>
+            <el-col :span="24">
+              <el-form :model="telForm" :rules="loginRules" label-position="left" >
+                <el-form-item>
+                  <el-input
+                    v-model="telForm.tel"
+                    autocomplete="off"
+                    placeholder="手机号"
+                    name="tel"
+                    clearable>
+                    |<el-select v-model="telKind"  slot="prepend">
+                      <el-option v-for="item in supportedLocation" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                    </el-select>
+                  </el-input>
+                </el-form-item>
+
+                <el-form-item>
+                  <el-input
+                    v-model="telForm.sms"
+                    autocomplete="off"
+                    placeholder="请输入短信验证码"
+                    name="sms"
+                    prefix-icon="el-icon-lock"
+                    clearable>
+                    <el-button type="primary" slot="append">获取验证码</el-button>
+                  </el-input>
+                </el-form-item>
+              </el-form>
+            </el-col>
+          </el-row>
+        </el-tab-pane>
+
+      </el-tabs>
+      <el-row>
+        <el-col :span="20" style="text-align:left">
+          <el-checkbox v-model="rememberMe"><span style="color:black">记住我 </span><span style="font-size:11px; color: grey">不是自己电脑不要勾选此项</span></el-checkbox>
+        </el-col>
+        <el-col :span="4">
+          <el-link type="primary">忘记密码？</el-link>
+        </el-col>
+      </el-row>
+      <el-row style="margin-top:5px">
+      <el-col :span="11">
+        <el-button type="primary" class="loginBtn">登录</el-button>
+      </el-col>
+      <el-col :span="11" :offset="2">
+        <el-button  class="loginBtn">注册</el-button>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -47,15 +103,40 @@ export default {
       }
     }
     return {
-      loginForm: {
+      accountForm: {
         userName: '',
+        password: ''
+      },
+      telForm: {
+        tel: '',
         password: ''
       },
       loginRules: {
         userName: [{ required: true, trigger: 'blur', validator: validateForm }],
         password: [{ required: true, trigger: 'blur', validator: validateForm }]
       },
-      loading: false
+      supportedLocation: [
+        {
+          id: 0,
+          name: '中国大陆'
+        },
+        {
+          id: 1,
+          name: '中国香港'
+        },
+        {
+          id: 2,
+          name: '中国澳门'
+        },
+        {
+          id: 3,
+          name: '中国台湾'
+        }
+      ],
+      telKind: 0,
+      loading: false,
+      activeName: 'account',
+      rememberMe: false
     }
   },
   components: {
@@ -71,5 +152,17 @@ export default {
     margin-top: 200px;
     margin-left: auto;
     margin-right: auto;
+  }
+  .loginBtn {
+    width: 100%;
+  }
+  .el-input {
+    .el-select {
+      width: 120px;
+    }
+    .el-button {
+      background-color: #409eff;
+      color: #FFF;
+    }
   }
 </style>
