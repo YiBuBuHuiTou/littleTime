@@ -1,16 +1,16 @@
 import axios from 'axios'
-import router from '../router'
+// import router from '../router'
 import store from '@/store/index'
-import auth from '@/utils/auth'
+import { getToken } from '@/utils/auth'
 // 默认超时设置
 axios.defaults.timeout = 50000
 // 相对路径设置
-axios.defaults.baseURL = process.env.API_BASE_URL
+axios.defaults.baseURL = 'https://www.easy-mock.com/mock/5e70e5ebe51d0e38885d6763/example'
 // request interceptor config
 axios.interceptors.request.use(
   response => {
     if (store.getters.token) {
-      response.headers['X-Token'] = auth.getToken()
+      response.headers['X-Token'] = getToken()
     }
     return response
   },
@@ -41,3 +41,4 @@ axios.interceptors.response.use(
     console.log(error)
   }
 )
+export default axios

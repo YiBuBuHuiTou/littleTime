@@ -8,7 +8,7 @@
           <el-tab-pane name="account" label="密码登录">
             <el-row>
               <el-col :span="24">
-                <el-form :model="accountForm" :rules="loginRules" label-position="left" >
+                <el-form ref="accountForm" :model="accountForm" :rules="loginRules" label-position="left" >
                   <el-form-item>
                     <el-input
                       v-model="accountForm.userName"
@@ -164,7 +164,19 @@ export default {
   },
   methods: {
     login () {
-      this.loading = true
+      if (this.activeName === 'account') {
+        this.$refs.accountForm.validate(valid => {
+          if (valid) {
+            this.$store.dispatch('user/login', this.accountForm).then(response => {
+
+            }).catch(err => {
+              console.log(err)
+            })
+          }
+        })
+      } else {
+
+      }
     }
   },
   watch: {
