@@ -9,7 +9,7 @@
             <el-row>
               <el-col :span="24">
                 <el-form ref="accountForm" :model="accountForm" :rules="loginRules" label-position="left" >
-                  <el-form-item>
+                  <el-form-item prop="userName">
                     <el-input
                       v-model="accountForm.userName"
                       ref="userName"
@@ -21,7 +21,7 @@
                     </el-input>
                   </el-form-item>
 
-                  <el-form-item>
+                  <el-form-item prop="password">
                     <el-input
                       v-model="accountForm.password"
                       ref="password"
@@ -40,8 +40,8 @@
           <el-tab-pane name="sms" label="短信验证码登录">
             <el-row>
               <el-col :span="24">
-                <el-form :model="telForm" :rules="loginRules" label-position="left" >
-                  <el-form-item>
+                <el-form :model="telForm" :rules="telRules" label-position="left" >
+                  <el-form-item prop="tel">
                     <el-input
                       v-model="telForm.tel"
                       ref="tel"
@@ -55,7 +55,7 @@
                     </el-input>
                   </el-form-item>
 
-                  <el-form-item>
+                  <el-form-item prop="sms">
                     <el-input
                       v-model="telForm.sms"
                       ref="sms"
@@ -99,7 +99,6 @@
 <script>
 // @ is an alias to /src
 // import HelloWorld from '@/components/HelloWorld.vue'
-import { validateString } from '@/utils/validate'
 
 export default {
   name: 'Login',
@@ -107,13 +106,13 @@ export default {
     // login
   },
   data () {
-    const validateForm = (rule, value, callback) => {
-      if (!validateString(value)) {
-        callback(new Error('The text can not be less than 0 digits'))
-      } else {
-        callback()
-      }
-    }
+    // const validateForm = (rule, value, callback) => {
+    //   if (value.trim() === '' && value.length > 0) {
+    //     callback(new Error('用户名不能为空'))
+    //   } else {
+    //     callback()
+    //   }
+    // }
     return {
       accountForm: {
         userName: '',
@@ -124,8 +123,11 @@ export default {
         password: ''
       },
       loginRules: {
-        userName: [{ required: true, trigger: 'blur', validator: validateForm }],
-        password: [{ required: true, trigger: 'blur', validator: validateForm }]
+        // userName: [{ required: true, trigger: 'blur', validator: validateForm }]
+        // password: [{ required: true, trigger: 'blur', validator: validateForm }]
+      },
+      telRules: {
+
       },
       supportedLocation: [
         {
