@@ -5,7 +5,7 @@ import { getToken, setToken, setRefreshToken } from '@/utils/auth'
 import { Message } from 'element-ui'
 import { refreshToken } from '@/api/authAPI'
 // 默认超时设置
-axios.defaults.timeout = 50000
+axios.defaults.timeout = 100000
 // 相对路径设置
 axios.defaults.baseURL = 'https://www.easy-mock.com/mock/5e70e5ebe51d0e38885d6763/example'
 // request interceptor config
@@ -35,6 +35,7 @@ axios.interceptors.response.use(
       if (process.env.NODE_ENV === 'development') {
         Message.success('操作成功')
       }
+      console.log(result)
       return result
     } else if (result.code === 1050) {
       Message.warning('token 过期')

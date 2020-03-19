@@ -19,15 +19,20 @@ const routes = [
   //   component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   // }
   {
-    path: '/',
+    path: '/login',
     name: 'login',
     component: Login
+  },
+  {
+    path: '/:id',
+    name: 'homePage',
+    component: () => import('@/views/home/index')
   }
 ]
 
 const router = new VueRouter({
   mode: 'history',
-  base: process.env.BASE_URL,
+  // base: process.env.BASE_URL,
   routes
 })
 

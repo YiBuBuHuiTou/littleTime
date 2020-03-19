@@ -83,7 +83,7 @@
         </el-row>
         <el-row style="margin-top:5px">
         <el-col :span="11">
-          <el-button type="primary" class="loginBtn" @click="login">登录</el-button>
+          <el-button type="primary" class="loginBtn" @click="loginHandler">登录</el-button>
         </el-col>
         <el-col :span="11" :offset="2">
           <el-button  class="loginBtn">注册</el-button>
@@ -99,7 +99,7 @@
 <script>
 // @ is an alias to /src
 // import HelloWorld from '@/components/HelloWorld.vue'
-
+import { login } from '@/api/userAPI'
 export default {
   name: 'Login',
   components: {
@@ -165,24 +165,55 @@ export default {
 
   },
   methods: {
-    login () {
+    loginHandler () {
       if (this.activeName === 'account') {
         this.$refs.accountForm.validate(valid => {
           if (valid) {
-            this.$store.dispatch('user/login', this.accountForm).then(response => {
-
+            this.loading = true
+            // this.$store.dispatch('user/login', this.accountForm).then(response => {
+            //   console.log('login succes' + response)
+            //   this.loading = false
+            // }).catch(err => {
+            //   this.loading = false
+            //   console.log('login fail' + err)
+            //   this.$message.error('登录失败')
+            // })
+            login(this.accountForm).then(response => {
+              if (response.result.code === 200) {
+                console.log('login succes' + response)
+                this.loading = false
+              }
             }).catch(err => {
-              console.log(err)
+              this.loading = false
+              this.$router.push({ path: '/12' })
+              console.log('loginfail' + err)
             })
           }
         })
       } else {
-
+        this.$refs.telForm.validate(valid => {
+          if (valid) {
+            // this.loading = true
+            // this.$store.dispatch('user/login', this.telForm).then(({ response }) => {
+            //   this.loading = false
+            //   console.log('login success' + response)
+            //   this.$route.push({ path: `/${response.user_id}` })
+            // }).catch(err => {
+            //   console.log('login fail' + err)
+            //   this.loading = false
+            // })
+            login().then(response => {
+              console.log(response)
+            })
+          }
+        })
       }
     }
   },
   watch: {
-
+    $route (to, from) {
+      console.log('route changed')
+    }
   }
 
 }
