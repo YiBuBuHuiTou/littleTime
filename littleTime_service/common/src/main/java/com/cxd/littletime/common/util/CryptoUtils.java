@@ -2,8 +2,6 @@ package com.cxd.littletime.common.util;
 
 import com.cxd.littletime.common.constant.ENCRYPT_TYPE;
 import com.cxd.littletime.common.exception.NotSupportedKeyException;
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -15,6 +13,7 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.security.Security;
 import java.util.Base64;
 
 /**
@@ -238,7 +237,11 @@ public class CryptoUtils {
             // AES秘钥生成器
             KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
             // 使用所给的字符串用秘钥生成器生成一个128位(16字节)的秘钥
-            keyGenerator.init(128, new SecureRandom(key.getBytes()));
+            // 指定SecurityRandom,new SecureRandom(key.getBytes()) => 不同系统下不一致
+            SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
+            secureRandom.setSeed(key.getBytes());
+
+            keyGenerator.init(128, secureRandom);
             SecretKey secretKey = keyGenerator.generateKey();
             //获取秘钥的二进制字节数组
             byte[] secretKeyBytes = secretKey.getEncoded();

@@ -4,7 +4,6 @@ import com.cxd.littletime.common.constant.ENCRYPT_TYPE;
 import com.cxd.littletime.common.util.CryptoUtils;
 import com.cxd.littletime.common.util.StringUtils;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.slf4j.Logger;
