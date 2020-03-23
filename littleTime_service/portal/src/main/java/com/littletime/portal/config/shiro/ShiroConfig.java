@@ -36,8 +36,10 @@ public class ShiroConfig {
     }
 
     @Bean(name = "shiroAuthorizingRealm")
-    public ShiroAuthorizingRealm shiroAuthorizingRealm() {
-        return new ShiroAuthorizingRealm();
+    public ShiroAuthorizingRealm shiroAuthorizingRealm(@Qualifier("credentialMatcher") CustomCredentialMacher credentialMacher) {
+        ShiroAuthorizingRealm shiroAuthorizingRealm = new ShiroAuthorizingRealm();
+        shiroAuthorizingRealm.setCredentialsMatcher(credentialMacher);
+        return shiroAuthorizingRealm;
     }
 
     @Bean(name = "shiroFilterFactoryBean")
@@ -50,6 +52,12 @@ public class ShiroConfig {
         filterMap.put("/user/*", "authc");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterMap);
         return shiroFilterFactoryBean;
+    }
+
+    @Bean(name = "credentialMatcher")
+    public CustomCredentialMacher credentialMacher() {
+        CustomCredentialMacher customCredentialMacher = new CustomCredentialMacher();
+        return customCredentialMacher;
     }
 
 }

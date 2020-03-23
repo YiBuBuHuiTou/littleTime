@@ -23,6 +23,6 @@ public class UserController {
         customAuthenticationBean.setLoginType(1);
         customAuthenticationBean.setUsername("111");
         SecurityUtils.getSubject().login(customAuthenticationBean);
-        return null;
+        return "login success";
     }
 }

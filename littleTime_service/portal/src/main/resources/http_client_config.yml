@@ -1,5 +1,4 @@
 http:
-
   #最大连接数
   maxTotal: 30
   #并发数
@@ -12,3 +11,5 @@ http:
   socketTimeout: 10000
   #提交请求前测试连接是否可用
   staleConnectionCheckEnabled: true
+
+  authentication_url: http://106.54.198.188:8080

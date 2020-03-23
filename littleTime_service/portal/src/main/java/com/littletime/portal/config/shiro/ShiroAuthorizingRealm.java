@@ -43,6 +43,9 @@ public class ShiroAuthorizingRealm extends AuthorizingRealm {
             return null;
         }
         CustomAuthenticationBean customAuthenticationBean = (CustomAuthenticationBean)authenticationToken;
-        return null;
+
+        UserInfo userInfo = new UserInfo();
+        userInfo.setUserName("111");
+        return new SimpleAuthenticationInfo(customAuthenticationBean.getPrincipal(), "password", getName());
     }
 }

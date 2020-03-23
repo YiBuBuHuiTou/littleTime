@@ -1,29 +1,25 @@
 package com.littletime.portal.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.littletime.portal.config.http.HttpResult;
 import com.littletime.portal.service.HttpService;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sun.misc.Request;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -51,6 +47,7 @@ public class HttpServiceImpl implements HttpService {
     public HttpResult doGet(String url) {
         LOGGER.debug("http get = " + url + "start");
         HttpGet httpGet = new HttpGet(url);
+        httpGet.setHeader("Content-Type","application/json");
         httpGet.setConfig(this.requestConfig);
         CloseableHttpResponse response = null;
         try {
@@ -103,21 +100,18 @@ public class HttpServiceImpl implements HttpService {
     @Override
     public HttpResult doPost(String url, Map<String, String> params) {
         HttpPost httpPost = new HttpPost(url);
+        httpPost.setHeader("Content-Type","application/json");
         httpPost.setConfig(requestConfig);
         if (params != null && !params.isEmpty()) {
-            List<NameValuePair> list = new ArrayList<>();
+  //        List<NameValuePair> list = new ArrayList<>();
+            JSONObject jsonObject = new JSONObject();
+
             for (Map.Entry<String, String> map : params.entrySet()) {
-                list.add(new BasicNameValuePair(map.getKey(), map.getValue()));
+                jsonObject.put(map.getKey(), map.getValue());
             }
-            UrlEncodedFormEntity urlEncodedFormEntity = null;
-            try {
-                urlEncodedFormEntity = new UrlEncodedFormEntity(list, "UTF-8");
-                httpPost.setEntity(urlEncodedFormEntity);
-            } catch (UnsupportedEncodingException e) {
-                LOGGER.error(e.getMessage());
-            } catch (IOException e) {
-                LOGGER.error(e.getMessage());
-            }
+            StringEntity stringEntity = null;
+            stringEntity = new StringEntity(jsonObject.toString(), "UTF-8");
+            httpPost.setEntity(stringEntity);
         }
         try {
             CloseableHttpResponse response = closeableHttpClient.execute(httpPost);
