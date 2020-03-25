@@ -2,6 +2,8 @@ package com.littletime.portal.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.littletime.portal.model.Role;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -116,4 +118,5 @@ public class UserInfoDto {
     public void setPermission(String permission) {
         this.permission = permission;
     }
+
 }
