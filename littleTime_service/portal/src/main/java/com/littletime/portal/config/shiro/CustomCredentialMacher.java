@@ -28,15 +28,12 @@ public class CustomCredentialMacher extends SimpleCredentialsMatcher {
 
     @Override
     public boolean doCredentialsMatch(AuthenticationToken token, AuthenticationInfo info) {
-        /**
-         * TODO 发请求测试是否登录
-         */
         Map<String,String> map = new HashMap<>();
-        map.put("userName", "cxd");
-        map.put("password", "password");
+        map.put("userName", info.getPrincipals().getPrimaryPrincipal().toString());
+        map.put("password", info.getCredentials().toString());
         HttpResult httpResult = null;
         try {
-            httpResult = httpService.doPost(baseUrl+"/authentication/signIn",map);
+            httpResult = httpService.doPost(baseUrl+"/authentication/signIn", map);
 
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();

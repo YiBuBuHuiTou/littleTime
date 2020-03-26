@@ -2,6 +2,7 @@ package com.littletime.portal.model;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.littletime.portal.model.dto.UserInfoDto;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -68,6 +69,23 @@ public class UserInfo implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss:SSS")
     @UpdateTimestamp
     private Date updateDate;
+
+    public UserInfoDto createDto() {
+        UserInfoDto userInfoDto = new UserInfoDto();
+        userInfoDto.setId(this.id);
+        userInfoDto.setCredential(this.credential);
+        userInfoDto.setUserName(this.userName);
+        userInfoDto.setNickName(this.nickName);
+        userInfoDto.setPhoneNumber(this.phoneNumber);
+        userInfoDto.setEmail(this.email);
+        userInfoDto.setSex(this.sex);
+        userInfoDto.setBirthday(this.birthday);
+        userInfoDto.setDescription(this.description);
+        userInfoDto.setRole(this.role.getRoleName());
+        userInfoDto.setPhoneNumber(this.permission);
+        return userInfoDto;
+    }
+
 
     public long getId() {
         return id;

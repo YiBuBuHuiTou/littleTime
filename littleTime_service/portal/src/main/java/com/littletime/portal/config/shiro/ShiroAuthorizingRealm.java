@@ -1,6 +1,7 @@
 package com.littletime.portal.config.shiro;
 
 import com.littletime.portal.model.UserInfo;
+import com.littletime.portal.model.dto.UserInfoDto;
 import com.littletime.portal.service.UserService;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -43,9 +44,14 @@ public class ShiroAuthorizingRealm extends AuthorizingRealm {
             return null;
         }
         CustomAuthenticationBean customAuthenticationBean = (CustomAuthenticationBean)authenticationToken;
+        UserInfoDto userInfoDto = userService.findUserByUserNameOrPhoneOrEmail(customAuthenticationBean.getAccountName());
+        if (userInfoDto != null) {
+            boolean isActive = userService.checkIsActiveBy(userInfoDto.getCredential());
+            if (!isActive) {
+                return null;
+            }
+        }
 
-        UserInfo userInfo = new UserInfo();
-        userInfo.setUserName("111");
-        return new SimpleAuthenticationInfo(customAuthenticationBean.getPrincipal(), "password", getName());
+        return new SimpleAuthenticationInfo(userInfoDto.getCredential(), customAuthenticationBean.getPassword(), getName());
     }
 }

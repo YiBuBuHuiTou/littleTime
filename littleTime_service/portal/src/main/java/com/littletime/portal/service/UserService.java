@@ -1,5 +1,6 @@
 package com.littletime.portal.service;
 
+import com.littletime.portal.model.dto.UserInfoDto;
 import org.springframework.stereotype.Service;
 
 /**
@@ -9,4 +10,7 @@ import org.springframework.stereotype.Service;
  * @Version 1.0
  **/
 public interface UserService {
+    boolean checkIsActiveBy(String credential);
+    UserInfoDto findUserByUserNameOrPhoneOrEmail(String account);
+
 }
