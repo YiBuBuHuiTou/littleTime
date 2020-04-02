@@ -1,17 +1,19 @@
 <template>
 <div id="">
-<span>omepage</span>
+<header-bar />
 </div>
 </template>
 
 <script>
+import headerBar from '@/components/headerBar'
+
 export default {
   name: 'homePage',
   components: {
-
+    headerBar
   },
   data () {
-
+    return {}
   },
   created () {
 

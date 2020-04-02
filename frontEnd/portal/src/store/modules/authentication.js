@@ -1,7 +1,7 @@
 import { refreshToken } from '@/api/authAPI'
 const state = {
-  access_token: '',
-  refresh_token: ''
+  access_token: window.localStorage.getItem('access_token') === null ? '' : window.localStorage.getItem('access_token'),
+  refresh_token: window.localStorage.getItem('refresh_token') === null ? '' : window.localStorage.getItem('refresh_token')
 }
 
 const mutations = {

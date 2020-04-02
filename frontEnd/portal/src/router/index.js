@@ -24,6 +24,11 @@ const routes = [
     component: Login
   },
   {
+    path: '/headerBar',
+    name: 'headerBar',
+    component: () => import('@/components/headerBar')
+  },
+  {
     path: '/:id',
     name: 'homePage',
     component: () => import('@/views/home/index')

@@ -11,13 +11,15 @@ public class CommonResultBean {
     private static final int SUCCESS_CODE = 1001;
     private static final int ACCESS_DENIED_CODE = 2001;
     private static final int NOT_PERMITTED_CODE = 3001;
-    private static final int  EXCEPTION_EXIST_CODE = 4001;
+    private static final int EXCEPTION_EXIST_CODE = 4001;
     private static final int UNKNOWN_CODE = 5001;
+    private static final int TOKEN_EXPIRED_CODE = 6001;
 
     private static final String SUCCESS = "SUCCESS";
     private static final String ACCESS_DENIED = "ACCESS_DENIED";
     private static final String NOT_PERMITTED = "NOT_PERMITTED";
     private static final String EXCEPTION_EXIST = "EXCEPTION_EXIST";
+    private static final String TOKEN_EXPIRED = "TOKEN_EXPIRED";
 
     private int code;
 

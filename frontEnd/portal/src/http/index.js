@@ -37,7 +37,7 @@ axios.interceptors.response.use(
       }
       console.log(result)
       return result
-    } else if (result.code === 1050) {
+    } else if (result.code === 6001) {
       Message.warning('token 过期')
       const self = this
       refreshToken().then(response => {
@@ -67,7 +67,7 @@ axios.interceptors.response.use(
       Message.warning('访问被拒绝')
     } else if (result.code === 3001) {
       Message.warning('无权限操作')
-    } else if (result.code === 9001) {
+    } else if (result.code === 4001) {
       Message.warning('请求出现错误')
     } else {
       Message.warning('出现未知错误')

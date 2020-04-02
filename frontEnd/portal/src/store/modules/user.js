@@ -4,6 +4,7 @@ const state = {
   userInfo: {
     userName: '',
     nickName: '',
+    credential: window.localStorage.getItem('credential') === null ? '' : window.localStorage.getItem('credential'),
     tel: '',
     email: '',
     role: ''
