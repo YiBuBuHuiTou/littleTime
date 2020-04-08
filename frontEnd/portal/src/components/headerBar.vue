@@ -27,6 +27,7 @@ export default {
     }
   },
   created () {
+    debugger
     if (this.$store.getters.userInfo.credential !== '' && this.$store.getters.access_token !== '') {
       this.isLogin = true
     } else {

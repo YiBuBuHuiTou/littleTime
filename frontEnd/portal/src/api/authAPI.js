@@ -1,7 +1,6 @@
-// eslint-disable-next-line camelcase
-import http_client from '@/http'
+import axios from '@/http'
 export function refreshToken () {
-  return http_client({
+  return axios({
     url: '/auth/refreshToken',
     method: 'post'
   })

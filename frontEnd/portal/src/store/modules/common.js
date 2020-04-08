@@ -1,13 +1,13 @@
 const state = {
-  retry_count: ''
+  retryCount: ''
 }
 
 const mutations = {
   RETRY_COUNT_ADD: state => {
-    state.retry_count++
+    state.retryCount++
   },
   RETRY_COUNT_CLEAR: state => {
-    state.retry_count = 0
+    state.retryCount = 0
   }
 }
 

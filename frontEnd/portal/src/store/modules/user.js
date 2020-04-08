@@ -5,7 +5,7 @@ const state = {
     userName: '',
     nickName: '',
     credential: window.localStorage.getItem('credential') === null ? '' : window.localStorage.getItem('credential'),
-    tel: '',
+    phoneNumber: '',
     email: '',
     role: ''
   }

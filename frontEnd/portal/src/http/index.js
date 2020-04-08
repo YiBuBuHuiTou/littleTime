@@ -7,7 +7,7 @@ import { refreshToken } from '@/api/authAPI'
 // 默认超时设置
 axios.defaults.timeout = 100000
 // 相对路径设置
-axios.defaults.baseURL = 'https://www.easy-mock.com/mock/5e70e5ebe51d0e38885d6763/example'
+axios.defaults.baseURL = ' http://106.54.198.188:7300/mock/5e8814bea47fbe3bbcf4bd9e/portal'
 // request interceptor config
 axios.interceptors.request.use(
   response => {
@@ -35,7 +35,6 @@ axios.interceptors.response.use(
       if (process.env.NODE_ENV === 'development') {
         Message.success('操作成功')
       }
-      console.log(result)
       return result
     } else if (result.code === 6001) {
       Message.warning('token 过期')

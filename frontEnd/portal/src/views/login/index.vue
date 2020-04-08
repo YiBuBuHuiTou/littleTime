@@ -100,6 +100,9 @@
 // @ is an alias to /src
 // import HelloWorld from '@/components/HelloWorld.vue'
 import { login } from '@/api/userAPI'
+import { getSupportedLocation } from '@/api/commonAPI'
+import { Message } from 'element-ui'
+
 export default {
   name: 'Login',
   components: {
@@ -115,11 +118,14 @@ export default {
     // }
     return {
       accountForm: {
+        loginType: 0,
         userName: '',
         password: ''
       },
+      loginType: 0,
       telForm: {
-        tel: '',
+        loginType: 1,
+        phoneNumber: '',
         password: ''
       },
       loginRules: {
@@ -129,24 +135,7 @@ export default {
       telRules: {
 
       },
-      supportedLocation: [
-        {
-          id: 0,
-          name: '中国大陆'
-        },
-        {
-          id: 1,
-          name: '中国香港'
-        },
-        {
-          id: 2,
-          name: '中国澳门'
-        },
-        {
-          id: 3,
-          name: '中国台湾'
-        }
-      ],
+      supportedLocation: [],
       telKind: 0,
       loading: false,
       activeName: 'account',
@@ -159,7 +148,11 @@ export default {
   },
 
   created () {
-
+    getSupportedLocation().then(response => {
+      this.supportedLocation = response.data.supportedLocation
+    }).catch(err => {
+      console.log(err)
+    })
   },
   destroyed () {
 
@@ -179,18 +172,36 @@ export default {
             //   this.$message.error('登录失败')
             // })
             login(this.accountForm).then(response => {
-              if (response.result.code === 200) {
-                console.log('login succes' + response)
-                this.loading = false
+              this.loading = false
+              if (response.code === 1001) {
+                debugger
+
+                // this.$store.getters.userInfo = response.data.userInfo
+                // this.$store.getters.token = response.data.token
+                this.$store.getters.userInfo.userName = response.data.userInfo.userName
+                this.$store.getters.userInfo.nickName = response.data.userInfo.nickName
+                this.$store.getters.userInfo.credential = response.data.userInfo.credential
+                this.$store.getters.userInfo.email = response.data.userInfo.email
+                this.$store.getters.userInfo.phoneNumber = response.data.userInfo.phoneNumber
+                this.$store.getters.userInfo.role = response.data.userInfo.role
+                this.$store.getters.token.accessToken = response.data.token.accessToken
+                this.$store.getters.token.refreshToken = response.data.token.refreshToken
+                window.localStorage.setItem('credential', this.$store.getters.userInfo.credential)
+                window.localStorage.setItem('accessToken', this.$store.getters.token.accessToken)
+                window.localStorage.setItem('refreshToken', this.$store.getters.token.refreshToken)
+                Message.warning('登录成功')
+                this.$router.push({ path: '/11' })
+              } else {
+                Message.warning('登录失败')
               }
             }).catch(err => {
-              this.loading = false
-              this.$router.push({ path: '/12' })
+              Message.warning('登录失败')
               console.log('loginfail' + err)
             })
           }
         })
       } else {
+        this.loginType = 1
         this.$refs.telForm.validate(valid => {
           if (valid) {
             // this.loading = true

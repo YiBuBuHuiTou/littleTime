@@ -1,8 +1,7 @@
-// eslint-disable-next-line camelcase
-import http_client from '@/http'
+import axios from '@/http'
 
 export function login (data) {
-  return http_client({
+  return axios({
     url: '/user/login',
     method: 'post',
     data
@@ -10,7 +9,7 @@ export function login (data) {
 }
 
 export function logout () {
-  return http_client({
+  return axios({
     url: '/user/logout',
     method: 'post'
   })
