@@ -178,17 +178,34 @@ export default {
 
                 // this.$store.getters.userInfo = response.data.userInfo
                 // this.$store.getters.token = response.data.token
-                this.$store.getters.userInfo.userName = response.data.userInfo.userName
-                this.$store.getters.userInfo.nickName = response.data.userInfo.nickName
-                this.$store.getters.userInfo.credential = response.data.userInfo.credential
-                this.$store.getters.userInfo.email = response.data.userInfo.email
-                this.$store.getters.userInfo.phoneNumber = response.data.userInfo.phoneNumber
-                this.$store.getters.userInfo.role = response.data.userInfo.role
+                const session = window.sessionStorage
+                const storage = window.localStorage
+                const userInfo = response.data.userInfo
+
+                this.$store.getters.userInfo.userName = userInfo.userName === '' || userInfo.userName == null ? '' : userInfo.userName
+                this.$store.getters.userInfo.nickName = userInfo.nickName === '' || userInfo.nickName == null ? '' : userInfo.nickName
+                this.$store.getters.userInfo.credential = userInfo.credential === '' || userInfo.credential == null ? '' : userInfo.credential
+                this.$store.getters.userInfo.email = userInfo.email === '' || userInfo.email == null ? '' : userInfo.email
+                this.$store.getters.userInfo.phoneNumber = userInfo.phoneNumber === '' || userInfo.phoneNumber == null ? '' : userInfo.phoneNumber
+                this.$store.getters.userInfo.role = userInfo.role === '' || userInfo.role == null ? '' : userInfo.role
+                if (session) {
+                  session.setItem()
+                  session.setItem()
+                  session.setItem()
+                  session.setItem()
+                  session.setItem()
+                } else {
+                  Message.error('浏览器不支持')
+                }
                 this.$store.getters.token.accessToken = response.data.token.accessToken
                 this.$store.getters.token.refreshToken = response.data.token.refreshToken
-                window.localStorage.setItem('credential', this.$store.getters.userInfo.credential)
-                window.localStorage.setItem('accessToken', this.$store.getters.token.accessToken)
-                window.localStorage.setItem('refreshToken', this.$store.getters.token.refreshToken)
+                if (storage) {
+                  storage.setItem('credential', this.$store.getters.userInfo.credential)
+                  storage.setItem('accessToken', this.$store.getters.token.accessToken)
+                  storage.setItem('refreshToken', this.$store.getters.token.refreshToken)
+                } else {
+                  Message.error('浏览器不支持')
+                }
                 Message.warning('登录成功')
                 this.$router.push({ path: '/11' })
               } else {

@@ -14,3 +14,13 @@ export function logout () {
     method: 'post'
   })
 }
+
+export function getUserInfo (credential) {
+  return axios({
+    url: '/user/getUserInfo',
+    method: 'post',
+    data: {
+      credential: credential
+    }
+  })
+}

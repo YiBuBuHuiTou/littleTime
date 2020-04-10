@@ -1,5 +1,5 @@
-const accessTokenKey = 'access-token'
-const refreshTokenKey = 'refresh-token'
+const accessTokenKey = 'accessToken'
+const refreshTokenKey = 'refreshToken'
 export function getToken () {
   return window.localStorage.getItem(accessTokenKey)
 }
@@ -17,4 +17,7 @@ export function removeToken () {
 }
 export function removeRefresToken () {
   window.localStorage.removeItem(refreshTokenKey)
+}
+export function userInfo2Session (userInfo) {
+
 }

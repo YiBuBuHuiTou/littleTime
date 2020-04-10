@@ -19,6 +19,7 @@
 </template>
 
 <script>
+import { getUserInfo } from '@/api/userAPI'
 export default {
   name: 'headerBar',
   data () {
@@ -30,6 +31,19 @@ export default {
     debugger
     if (this.$store.getters.userInfo.credential !== '' && this.$store.getters.access_token !== '') {
       this.isLogin = true
+      const session = window.sessionStorage
+      if (session.getItem('userName') == null ||
+            session.getItem('nickName') == null ||
+            session.getItem('role') == null
+      ) {
+        getUserInfo(this.$store.getters.userInfo.credential).then(response => {
+          session.setItem('userName', response.data.userInfo.userName)
+          session.setItem('nickName', response.data.userInfo.nickName)
+          session.setItem('role', response.data.userInfo.role)
+        }).catch(err => {
+          console.log(err)
+        })
+      }
     } else {
       this.isLogin = false
     }
