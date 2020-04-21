@@ -1,4 +1,3 @@
-WEIXIN little programe
 
 正在开发中，还没有完全想好，慢慢更新吧。 
 
