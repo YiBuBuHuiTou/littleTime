@@ -3,7 +3,7 @@
     <el-row :gutter="20" class="header-row">
       <el-col :span="1" >主站</el-col>
       <div v-if="isLogin">
-      <el-col :span="1" :offset="16">用户名</el-col>
+      <el-col :span="1" :offset="16">{{this.$store.getters.userInfo.nickName}}</el-col>
       <el-col :span="1" >消息</el-col>
       <el-col :span="1" >动态</el-col>
       <el-col :span="1" >收藏</el-col>
@@ -19,34 +19,19 @@
 </template>
 
 <script>
-import { getUserInfo } from '@/api/userAPI'
+import { loadDefaultMessage } from '@/utils/auth'
 export default {
   name: 'headerBar',
   data () {
     return {
-      isLogin: false
+      isLogin: false,
+      userName: '',
+      nickName: ''
     }
   },
   created () {
     debugger
-    if (this.$store.getters.userInfo.credential !== '' && this.$store.getters.access_token !== '') {
-      this.isLogin = true
-      const session = window.sessionStorage
-      if (session.getItem('userName') == null ||
-            session.getItem('nickName') == null ||
-            session.getItem('role') == null
-      ) {
-        getUserInfo(this.$store.getters.userInfo.credential).then(response => {
-          session.setItem('userName', response.data.userInfo.userName)
-          session.setItem('nickName', response.data.userInfo.nickName)
-          session.setItem('role', response.data.userInfo.role)
-        }).catch(err => {
-          console.log(err)
-        })
-      }
-    } else {
-      this.isLogin = false
-    }
+    this.isLogin = loadDefaultMessage()
   },
   methods: {
     redirect_to_login () {

@@ -174,8 +174,6 @@ export default {
             login(this.accountForm).then(response => {
               this.loading = false
               if (response.code === 1001) {
-                debugger
-
                 // this.$store.getters.userInfo = response.data.userInfo
                 // this.$store.getters.token = response.data.token
                 const session = window.sessionStorage
@@ -189,11 +187,11 @@ export default {
                 this.$store.getters.userInfo.phoneNumber = userInfo.phoneNumber === '' || userInfo.phoneNumber == null ? '' : userInfo.phoneNumber
                 this.$store.getters.userInfo.role = userInfo.role === '' || userInfo.role == null ? '' : userInfo.role
                 if (session) {
-                  session.setItem()
-                  session.setItem()
-                  session.setItem()
-                  session.setItem()
-                  session.setItem()
+                  session.setItem('userName', this.$store.getters.userInfo.userName)
+                  session.setItem('nickName', this.$store.getters.userInfo.nickName)
+                  session.setItem('email', this.$store.getters.userInfo.email)
+                  session.setItem('phoneNumber', this.$store.getters.userInfo.phoneNumber)
+                  session.setItem('role', this.$store.getters.userInfo.role)
                 } else {
                   Message.error('浏览器不支持')
                 }
