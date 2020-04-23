@@ -24,7 +24,6 @@ export function userInfo2Session (userInfo) {
 
 }
 export function loadDefaultMessage () {
-  debugger
   console.log(store.getters.userInfo.credential)
   if (store.getters.userInfo.credential !== '' && store.getters.access_token !== '') {
     const session = window.sessionStorage
@@ -32,7 +31,6 @@ export function loadDefaultMessage () {
 
     } else if (session.getItem('userName') == null || session.getItem('nickName') == null || session.getItem('role') == null) {
       getUserInfo(store.getters.userInfo.credential).then(response => {
-        debugger
         session.setItem('userName', response.data.userInfo.userName)
         session.setItem('nickName', response.data.userInfo.nickName)
         session.setItem('email', response.data.userInfo.email)

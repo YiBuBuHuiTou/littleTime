@@ -5,11 +5,11 @@ import Login from '../views/login'
 Vue.use(VueRouter)
 
 const routes = [
-  // {
-  //   path: '/',
-  //   name: 'Home',
-  //   component: Home
-  // },
+  {
+    path: '/',
+    name: 'Home',
+    component: () => import('@/views/home/index')
+  },
   // {
   //   path: '/about',
   //   name: 'About',
